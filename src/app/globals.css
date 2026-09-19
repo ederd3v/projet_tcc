@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-special-elite: theme(fontFamily.display);
+}
+
+body {
+  background-color: #141110;
+  color: #f4ead9;
+}
+
+/* Halo âmbar suave — mesmo efeito visual que assets/custom.css do site publicado */
+.halo-bg {
+  background:
+    radial-gradient(circle at 50% 30%, rgba(217, 140, 63, 0.25), transparent 60%),
+    #141110;
+}

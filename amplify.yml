@@ -1,0 +1,25 @@
+# AWS Amplify Hosting — build spec pro app Next.js (RFC 6.2/8: "AWS Amplify Hosting,
+# deploy contínuo do Next.js integrado ao GitHub"). Amplify detecta esse arquivo
+# automaticamente ao conectar o repositório.
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+        - npx prisma generate
+    build:
+      commands:
+        # `db push` porque ainda não existe histórico de migrations (o dev local usa
+        # SQLite). Depois do primeiro deploy contra o RDS, trocar para
+        # `prisma migrate deploy` com migrations versionadas — ver README.md.
+        - npx prisma db push
+        - npm run build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - node_modules/**/*
+      - .next/cache/**/*

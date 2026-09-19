@@ -1,0 +1,64 @@
+// Modelo de dados conforme RFC seção 6.4 (TCC - CRM bebidas.md).
+// 4 entidades: Cliente 1—N Pedido, Pedido 1—N ItemPedido, ItemPedido N—1 Produto.
+//
+// Provider: SQLite para dev local sem infra (não há Docker/Postgres nesta
+// máquina). Em produção o RFC exige PostgreSQL (Amazon RDS) — troque a linha
+// abaixo para `provider = "postgresql"` e rode `prisma migrate dev` de novo
+// contra a DATABASE_URL do RDS. É a única mudança necessária no schema.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" // produção: "postgresql" (Amazon RDS, RFC 6.2/8)
+  url      = env("DATABASE_URL")
+}
+
+// SQLite não suporta enum nativo do Prisma — em produção (postgresql) dá pra
+// voltar a `enum StatusPedido`. Os valores válidos ficam centralizados em
+// src/lib/status.ts e validados com zod nas server actions.
+// PENDENTE | CONFIRMADO | ENTREGUE | CANCELADO
+
+model Cliente {
+  id        String   @id @default(cuid())
+  nome      String
+  telefone  String
+  email     String?
+  criadoEm  DateTime @default(now())
+  pedidos   Pedido[]
+}
+
+model Produto {
+  id          String       @id @default(cuid())
+  nome        String
+  descricao   String
+  preco       Float
+  fotoUrl     String // S3 em produção; caminho em /products em dev/seed
+  categoria   String // "licor" | "kombucha" | "ice"
+  volumeMl    Int
+  ativo       Boolean      @default(true) // RF01: só ativo=true aparece na landing
+  itens       ItemPedido[]
+  criadoEm    DateTime     @default(now())
+}
+
+model Pedido {
+  id          String       @id @default(cuid())
+  cliente     Cliente      @relation(fields: [clienteId], references: [id])
+  clienteId   String
+  data        DateTime     @default(now())
+  status      String       @default("PENDENTE")
+  observacao  String?
+  total       Float
+  itens       ItemPedido[]
+}
+
+model ItemPedido {
+  id         String  @id @default(cuid())
+  pedido     Pedido  @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  pedidoId   String
+  produto    Produto @relation(fields: [produtoId], references: [id])
+  produtoId  String
+  quantidade Int
+  precoUnit  Float // preço no momento da venda (não muda se o produto mudar de preço depois)
+}
