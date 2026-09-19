@@ -52,6 +52,10 @@ const PASSOS = [
   },
 ];
 
+// Depoimentos publicados pela própria Bebidas Maruim no site anterior
+// (sippable-tales.lovable.app), capturados em 15/09/2026 e conferidos no
+// espelho em ~/Desktop/maruim-site — são conteúdo do cliente, não exemplos
+// inventados. Procedência declarada a pedido da review de @max-d3v.
 const DEPOIMENTOS = [
   {
     nome: "Camila R.",
@@ -73,12 +77,30 @@ const DEPOIMENTOS = [
 
 export default async function HomePage() {
   // RF01: landing exibe catálogo com produtos ativo=true, direto do banco.
-  const [licores, kombuchas, ices] = await Promise.all([
-    prisma.produto.findMany({ where: { categoria: "licor", ativo: true }, orderBy: { preco: "asc" }, take: 2 }),
-    prisma.produto.findMany({ where: { categoria: "kombucha", ativo: true }, orderBy: { preco: "asc" }, take: 2 }),
-    prisma.produto.findMany({ where: { categoria: "ice", ativo: true }, orderBy: { preco: "asc" }, take: 2 }),
+  // Desempate por criadoEm: sem ele, produtos de mesmo preço saem em ordem
+  // indefinida e a vitrine muda sozinha entre requisições (review @max-d3v).
+  const porPreco = { preco: "asc" } as const;
+  const desempate = { criadoEm: "asc" } as const;
+  const destaque = (categoria: "licor" | "kombucha" | "ice") =>
+    prisma.produto.findMany({
+      where: { categoria, ativo: true },
+      orderBy: [porPreco, desempate],
+      take: 2,
+    });
+
+  const [licores, kombuchas, ices, totalLicor, totalKombucha, totalIce] = await Promise.all([
+    destaque("licor"),
+    destaque("kombucha"),
+    destaque("ice"),
+    // Contadas no banco, não fixas: com revalidate = 0 a home lê sempre do
+    // banco, então número cravado no código contradiz o próprio RF07 — o dono
+    // desativa um produto no CRM e o hero continuaria anunciando o total antigo
+    // (review @max-d3v e @lufoanx).
+    prisma.produto.count({ where: { categoria: "licor", ativo: true } }),
+    prisma.produto.count({ where: { categoria: "kombucha", ativo: true } }),
+    prisma.produto.count({ where: { categoria: "ice", ativo: true } }),
   ]);
-  const contagem = { licor: 11, kombucha: 7, ice: 4 } as const;
+  const contagem = { licor: totalLicor, kombucha: totalKombucha, ice: totalIce } as const;
   const produtosPorCategoria = { licor: licores, kombucha: kombuchas, ice: ices } as const;
 
   return (
@@ -100,9 +122,9 @@ export default async function HomePage() {
             essência de cada fruta, direto de Joinville/SC pra sua casa.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-maruim-muted">
-            <span>11+ sabores de Licor</span>
-            <span>7+ Kombuchas</span>
-            <span>4 sabores de Ice</span>
+            <span>{contagem.licor} sabores de Licor</span>
+            <span>{contagem.kombucha} Kombuchas</span>
+            <span>{contagem.ice} sabores de Ice</span>
           </div>
           <div className="flex flex-wrap justify-center gap-4">
             <Link href="/licores" className="rounded-full bg-maruim-amber px-6 py-3 text-maruim-bg">
