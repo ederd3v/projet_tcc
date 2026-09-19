@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { whatsappLinkGeneric } from "@/lib/whatsapp";
 
 const WHATSAPP_DISPLAY = "(47) 9 9240-1430";
@@ -6,6 +7,12 @@ const WHATSAPP_DISPLAY = "(47) 9 9240-1430";
 // Jaisson — o link só aparece quando essa env var for preenchida, pra não
 // repetir o bug do site publicado (`instagram.com` puro, sem destino real).
 const INSTAGRAM_URL = process.env.NEXT_PUBLIC_INSTAGRAM_URL;
+
+const CATEGORIAS = [
+  { href: "/licores", label: "Licores" },
+  { href: "/kombuchas", label: "Kombuchas" },
+  { href: "/ice", label: "Ice" },
+];
 
 export function Footer() {
   return (
@@ -37,6 +44,17 @@ export function Footer() {
             </a>
           </p>
         )}
+        <nav className="flex gap-4 pt-2">
+          {CATEGORIAS.map((c) => (
+            <Link key={c.href} href={c.href} className="hover:text-maruim-amberLight">
+              {c.label}
+            </Link>
+          ))}
+        </nav>
+        <div className="border-t border-maruim-amber/10 pt-4 text-xs">
+          <p>© {new Date().getFullYear()} Bebidas Maruim · Todos os direitos reservados</p>
+          <p className="mt-1">Beba com moderação · Venda proibida para menores de 18 anos</p>
+        </div>
       </div>
     </footer>
   );
