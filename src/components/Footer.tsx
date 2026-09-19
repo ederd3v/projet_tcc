@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { whatsappLinkGeneric } from "@/lib/whatsapp";
+import { CATEGORIAS } from "@/lib/categorias";
 
 const WHATSAPP_DISPLAY = "(47) 9 9240-1430";
 // Pendência aberta no HANDOFF (item 5): não temos o @ real do perfil da
@@ -8,11 +9,6 @@ const WHATSAPP_DISPLAY = "(47) 9 9240-1430";
 // repetir o bug do site publicado (`instagram.com` puro, sem destino real).
 const INSTAGRAM_URL = process.env.NEXT_PUBLIC_INSTAGRAM_URL;
 
-const CATEGORIAS = [
-  { href: "/licores", label: "Licores" },
-  { href: "/kombuchas", label: "Kombuchas" },
-  { href: "/ice", label: "Ice" },
-];
 
 export function Footer() {
   return (

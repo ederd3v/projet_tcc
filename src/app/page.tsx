@@ -5,34 +5,10 @@ import { Footer } from "@/components/Footer";
 import { prisma } from "@/lib/prisma";
 import { ProductCard } from "@/components/ProductCard";
 import { whatsappLinkGeneric } from "@/lib/whatsapp";
+import { CATEGORIAS } from "@/lib/categorias";
 
 export const revalidate = 0; // sempre lê do banco — catálogo é editado no CRM (RF07)
 
-const CATEGORIAS = [
-  {
-    categoria: "licor" as const,
-    href: "/licores",
-    titulo: "Nossos Licores",
-    destaque: "Licores",
-    intro:
-      "Produzidos artesanalmente com frutas frescas e técnicas tradicionais. Cada garrafa, uma experiência única.",
-  },
-  {
-    categoria: "kombucha" as const,
-    href: "/kombuchas",
-    titulo: "Kombuchas Vivas",
-    destaque: "Vivas",
-    intro:
-      "Fermentadas em chá verde e preto por até 21 dias. Probióticas, vivas e naturalmente gaseificadas.",
-  },
-  {
-    categoria: "ice" as const,
-    href: "/ice",
-    titulo: "Maruim Ice",
-    destaque: "Ice",
-    intro: "A versão mais refrescante. Pronto pra beber, em quatro sabores. Só R$ 7,50 cada.",
-  },
-];
 
 const PASSOS = [
   {
