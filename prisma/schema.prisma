@@ -11,7 +11,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite" // produção: "postgresql" (Amazon RDS, RFC 6.2/8)
+  provider = "postgresql" // RFC 6.2/8 — Neon no teste, Amazon RDS em produção
   url      = env("DATABASE_URL")
 }
 
