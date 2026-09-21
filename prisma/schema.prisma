@@ -38,6 +38,11 @@ model Produto {
   categoria   String // "licor" | "kombucha" | "ice"
   volumeMl    Int
   ativo       Boolean      @default(true) // RF01: só ativo=true aparece na landing
+  // Selo editorial mostrado no card de destaque da home ("Especial", "⭐ Top",
+  // "Bestseller", "Clássico"). No site publicado era fixo no código; aqui vive
+  // no banco para o dono poder mudar pelo CRM, como pede o RF07.
+  selo        String?
+  destaque    Boolean      @default(false) // aparece entre os 2 destaques da home
   itens       ItemPedido[]
   criadoEm    DateTime     @default(now())
 }

@@ -1,11 +1,14 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { prisma } from "@/lib/prisma";
-import { ProductCard } from "@/components/ProductCard";
+import { CardDestaque } from "@/components/CardDestaque";
 import { whatsappLinkGeneric } from "@/lib/whatsapp";
 import { CATEGORIAS } from "@/lib/categorias";
+import { Hero } from "@/components/Hero";
+import { Marquee } from "@/components/Marquee";
+import { SecaoTitulo } from "@/components/SecaoTitulo";
+import { SecaoContato } from "@/components/SecaoContato";
 
 export const revalidate = 0; // sempre lê do banco — catálogo é editado no CRM (RF07)
 
@@ -57,17 +60,20 @@ export default async function HomePage() {
   // indefinida e a vitrine muda sozinha entre requisições (review @max-d3v).
   const porPreco = { preco: "asc" } as const;
   const desempate = { criadoEm: "asc" } as const;
-  const destaque = (categoria: "licor" | "kombucha" | "ice") =>
+  // Os dois cards da home: primeiro os marcados como `destaque` no CRM; se
+  // faltar algum, completa pelos mais baratos. O desempate por criadoEm evita
+  // ordem indefinida entre produtos de mesmo preço (review @max-d3v).
+  const doisDestaques = (categoria: "licor" | "kombucha" | "ice") =>
     prisma.produto.findMany({
       where: { categoria, ativo: true },
-      orderBy: [porPreco, desempate],
+      orderBy: [{ destaque: "desc" }, porPreco, desempate],
       take: 2,
     });
 
   const [licores, kombuchas, ices, totalLicor, totalKombucha, totalIce] = await Promise.all([
-    destaque("licor"),
-    destaque("kombucha"),
-    destaque("ice"),
+    doisDestaques("licor"),
+    doisDestaques("kombucha"),
+    doisDestaques("ice"),
     // Contadas no banco, não fixas: com revalidate = 0 a home lê sempre do
     // banco, então número cravado no código contradiz o próprio RF07 — o dono
     // desativa um produto no CRM e o hero continuaria anunciando o total antigo
@@ -82,105 +88,104 @@ export default async function HomePage() {
   return (
     <>
       <Header />
-      <main className="halo-bg">
-        <section className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-4 py-20 text-center">
-          <div className="relative h-64 w-64">
-            <Image src="/products/lineup.png" alt="Linha Bebidas Maruim" fill className="object-contain" />
-          </div>
-          <h1 className="font-display text-4xl leading-tight text-maruim-amberLight md:text-5xl">
-            Bebidas
-            <br />
-            Maruim
-          </h1>
-          <p className="font-serif text-lg text-maruim-amber">Licores Finos · Kombuchas · Ice</p>
-          <p className="max-w-xl text-maruim-cream">
-            Produção artesanal com ingredientes naturais selecionados. Sabores únicos que capturam a
-            essência de cada fruta, direto de Joinville/SC pra sua casa.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-maruim-muted">
-            <span>{contagem.licor} sabores de Licor</span>
-            <span>{contagem.kombucha} Kombuchas</span>
-            <span>{contagem.ice} sabores de Ice</span>
-          </div>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/licores" className="rounded-full bg-maruim-amber px-6 py-3 text-maruim-bg">
-              Ver Cardápio Completo
-            </Link>
-            <a
-              href={whatsappLinkGeneric()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full border border-maruim-amber px-6 py-3 text-maruim-amberLight hover:bg-maruim-amber/10"
-            >
-              📱 (47) 9 9240-1430
-            </a>
-          </div>
-        </section>
+      <main>
+        <Hero contagem={contagem} />
+        <Marquee />
 
-        {CATEGORIAS.map(({ categoria, href, titulo, destaque, intro }) => {
+        {CATEGORIAS.map(({ categoria, href, eyebrow, titulo, destaque, intro }, i) => {
           const nomeBase = titulo.replace(destaque, "").trim();
           const produtos = produtosPorCategoria[categoria];
           if (produtos.length === 0) return null;
           return (
-            <section key={categoria} className="mx-auto max-w-6xl px-4 pb-20">
-              <div className="mb-6 flex items-end justify-between gap-4">
+            <section
+              key={categoria}
+              className={`px-6 py-24 md:px-12 md:py-28 ${i > 0 ? "border-t border-maruim-line" : ""}`}
+            >
+              <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
                 <div>
-                  <h2 className="font-serif text-2xl text-maruim-amberLight">
-                    {nomeBase} <em className="text-maruim-amber">{destaque}</em>
+                  <p className="flex items-center gap-3 text-[10px] uppercase tracking-[0.22em] text-maruim-amber">
+                    <span className="h-px w-6 bg-maruim-amber" />
+                    {eyebrow}
+                  </p>
+                  <h2 className="mt-4 font-display text-4xl leading-[1.05] text-maruim-cream md:text-5xl">
+                    {nomeBase} <em className="font-serif italic text-maruim-amber">{destaque}</em>
                   </h2>
-                  <p className="mt-2 max-w-xl text-sm text-maruim-cream">{intro}</p>
                 </div>
-                <Link href={href} className="whitespace-nowrap text-sm text-maruim-amber hover:text-maruim-amberLight">
-                  Ver tudo →
-                </Link>
+                <p className="max-w-xs text-sm leading-[1.8] text-maruim-muted md:text-right">{intro}</p>
               </div>
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 {produtos.map((p) => (
-                  <ProductCard
+                  <CardDestaque
                     key={p.id}
                     nome={p.nome}
-                    descricao={p.descricao}
                     preco={p.preco}
                     fotoUrl={p.fotoUrl}
-                    volumeMl={p.volumeMl}
+                    selo={p.selo}
+                    href={href}
                   />
                 ))}
               </div>
-              <p className="mt-3 text-xs text-maruim-muted">
-                {contagem[categoria]} sabores disponíveis no total.
-              </p>
+
+              <div className="mt-10 text-center">
+                <Link href={href} className="font-display text-lg text-maruim-amber hover:underline">
+                  Ver todos os {contagem[categoria]} sabores →
+                </Link>
+              </div>
             </section>
           );
         })}
 
-        <section className="mx-auto max-w-6xl px-4 pb-20">
-          <h2 className="mb-10 text-center font-serif text-2xl text-maruim-amberLight">
-            Como <em className="text-maruim-amber">pedir</em>
-          </h2>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+        <section className="border-t border-maruim-line bg-maruim-dark px-6 py-24 md:px-12 md:py-28">
+          <SecaoTitulo
+            eyebrow="Simples assim"
+            titulo="Como"
+            destaque="pedir"
+            apoio="Sem app, sem cadastro. Três passos pra ter a Maruim na sua mesa."
+            centralizado
+          />
+          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-px bg-maruim-line md:grid-cols-3">
             {PASSOS.map((passo) => (
-              <div key={passo.numero} className="text-center">
-                <p className="font-display text-3xl text-maruim-amber">{passo.numero}</p>
-                <h3 className="mt-2 font-serif text-lg text-maruim-amberLight">{passo.titulo}</h3>
-                <p className="mt-2 text-sm text-maruim-cream">{passo.descricao}</p>
+              <div key={passo.numero} className="bg-maruim-dark p-10 transition-colors hover:bg-maruim-card">
+                <p className="font-serif text-6xl font-bold text-maruim-amber/30">{passo.numero}</p>
+                <p className="mt-4 font-display text-2xl text-maruim-cream">{passo.titulo}</p>
+                <p className="mt-3 text-sm leading-[1.8] text-maruim-muted">{passo.descricao}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-4 pb-20">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <section className="border-t border-maruim-line px-6 py-24 md:px-12 md:py-28">
+          <SecaoTitulo eyebrow="O que dizem" titulo="Quem prova," destaque="volta." />
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {DEPOIMENTOS.map((d) => (
-              <div key={d.nome} className="halo-bg rounded-xl border border-maruim-amber/20 p-6">
-                <p className="text-maruim-amber">★★★★★</p>
-                <p className="mt-3 text-sm text-maruim-cream">&ldquo;{d.texto}&rdquo;</p>
-                <p className="mt-4 text-sm font-medium text-maruim-amberLight">
-                  {d.nome} <span className="text-maruim-muted">· {d.local}</span>
+              <div
+                key={d.nome}
+                className="border border-maruim-line bg-maruim-card p-8 transition-colors hover:border-maruim-amber/40"
+              >
+                <div className="flex gap-1 text-maruim-amber">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <span key={i}>★</span>
+                  ))}
+                </div>
+                <p className="mt-5 font-serif text-lg italic leading-[1.6] text-maruim-cream">
+                  &ldquo;{d.texto}&rdquo;
                 </p>
+                <div className="mt-6 flex items-center gap-3 border-t border-maruim-line pt-5">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-maruim-amber/15 font-display text-maruim-amber">
+                    {d.nome.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="font-display text-base text-maruim-cream">{d.nome}</p>
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-maruim-muted">{d.local}</p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </section>
+
+        <SecaoContato />
       </main>
       <Footer />
     </>

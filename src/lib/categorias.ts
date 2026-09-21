@@ -16,6 +16,8 @@ export type LinhaDeProduto = {
   href: string;
   /** Rótulo curto, usado na navegação do rodapé. */
   label: string;
+  /** Olho-de-boi acima do título da seção: "500ml · Licores Finos". */
+  eyebrow: string;
   /** Título da seção na home, com `destaque` renderizado em cor de acento. */
   titulo: string;
   destaque: string;
@@ -27,6 +29,7 @@ export const CATEGORIAS: readonly LinhaDeProduto[] = [
     categoria: "licor",
     href: "/licores",
     label: "Licores",
+    eyebrow: "500ml · Licores Finos",
     titulo: "Nossos Licores",
     destaque: "Licores",
     intro:
@@ -36,6 +39,7 @@ export const CATEGORIAS: readonly LinhaDeProduto[] = [
     categoria: "kombucha",
     href: "/kombuchas",
     label: "Kombuchas",
+    eyebrow: "350ml · Fermentação Natural",
     titulo: "Kombuchas Vivas",
     destaque: "Vivas",
     intro:
@@ -45,6 +49,7 @@ export const CATEGORIAS: readonly LinhaDeProduto[] = [
     categoria: "ice",
     href: "/ice",
     label: "Ice",
+    eyebrow: "350ml · Gelado",
     titulo: "Maruim Ice",
     destaque: "Ice",
     intro: "A versão mais refrescante. Pronto pra beber, em quatro sabores. Só R$ 7,50 cada.",
