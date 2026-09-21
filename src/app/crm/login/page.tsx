@@ -10,7 +10,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
-  const callbackUrl = params.get("callbackUrl") ?? "/crm";
+  const callbackUrl = params.get("callbackUrl") ?? "/painel";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [erro, setErro] = useState<string | null>(null);
@@ -78,7 +78,7 @@ function LoginForm() {
             disabled={carregando}
             className="w-full rounded-full border border-maruim-amber px-4 py-2 text-maruim-amberLight disabled:opacity-50"
           >
-            {carregando ? "Entrando..." : "Entrar (fallback local)"}
+            {carregando ? "Entrando..." : "Entrar"}
           </button>
         </form>
       </div>

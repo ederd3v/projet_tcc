@@ -15,24 +15,12 @@ export const dynamic = "force-dynamic";
  * mudar o preço do produto depois, o histórico não se altera.
  */
 
-// Em desenvolvimento o painel roda em outra porta (4200), então precisa de
-// CORS. Em produção os dois saem do mesmo domínio e isto deixa de valer.
-const ORIGENS_DEV = ["http://localhost:4200", "http://127.0.0.1:4200"];
+// O painel é servido pelo próprio webapp (public/painel), então painel e API
+// dividem a mesma origem: o cookie de sessão acompanha as chamadas sozinho e
+// não há CORS envolvido. O acesso é barrado pelo middleware, que cobre
+// /painel e /api/crm/* — proteger só a tela deixaria os dados saindo pela API.
 
-function cors(origem: string | null) {
-  const liberado = origem && ORIGENS_DEV.includes(origem) ? origem : ORIGENS_DEV[0];
-  return {
-    "Access-Control-Allow-Origin": liberado,
-    "Access-Control-Allow-Methods": "GET, PUT, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-  };
-}
-
-export async function OPTIONS(req: Request) {
-  return new NextResponse(null, { status: 204, headers: cors(req.headers.get("origin")) });
-}
-
-export async function GET(req: Request) {
+export async function GET() {
   const [produtos, clientes, pedidos] = await Promise.all([
     prisma.produto.findMany({ orderBy: { criadoEm: "asc" } }),
     prisma.cliente.findMany({ orderBy: { criadoEm: "asc" } }),
@@ -71,7 +59,7 @@ export async function GET(req: Request) {
     })),
   };
 
-  return NextResponse.json(estado, { headers: cors(req.headers.get("origin")) });
+  return NextResponse.json(estado);
 }
 
 type EstadoRecebido = {
@@ -91,7 +79,6 @@ type EstadoRecebido = {
 
 export async function PUT(req: Request) {
   const corpo = (await req.json()) as EstadoRecebido;
-  const cabecalhos = cors(req.headers.get("origin"));
 
   try {
     await prisma.$transaction(
@@ -164,13 +151,13 @@ export async function PUT(req: Request) {
       { timeout: 120_000, maxWait: 20_000 }
     );
 
-    return NextResponse.json({ ok: true }, { headers: cabecalhos });
+    return NextResponse.json({ ok: true });
   } catch (e) {
     // Mensagens do Prisma começam com quebra de linha e trazem o detalhe útil
     // no fim — cortar pela primeira linha devolvia string vazia.
     const bruto = e instanceof Error ? e.message.trim() : String(e);
     const msg = bruto.split("\n").filter(Boolean).slice(-2).join(" · ").slice(0, 300);
     console.error("[PUT /api/crm/estado]", bruto);
-    return NextResponse.json({ ok: false, erro: msg || "erro ao salvar" }, { status: 500, headers: cabecalhos });
+    return NextResponse.json({ ok: false, erro: msg || "erro ao salvar" }, { status: 500 });
   }
 }
