@@ -12,3 +12,8 @@ next-env.d.ts
 
 # artefato de build incremental do tsc (o mesmo que apontei no PR #6 do @max-d3v)
 *.tsbuildinfo
+
+# backups de .env — nunca versionar
+.env.bak*
+.env.*.bak
+*.env.bak*
