@@ -103,13 +103,19 @@
           <button class="chip" data-modo="lista">Lista</button>
         </div>
         <span class="hint">Arraste o card para mudar a etapa</span>
+        <div class="dados-acoes">
+          <button class="chip" id="btn-limpar-pedidos" title="Apaga todos os pedidos; clientes e catálogo ficam">Limpar pedidos</button>
+        </div>
       </div>
       <div id="pedidos-body"></div>
     </section>
 
     <!-- Clientes -->
     <section class="view" id="v-clientes">
-      <div class="toolbar"><button class="btn primary" data-action="novo-cliente">+ Novo cliente</button><span class="hint" id="cli-hint"></span></div>
+      <div class="toolbar"><button class="btn primary" data-action="novo-cliente">+ Novo cliente</button><span class="hint" id="cli-hint"></span>
+        <div class="dados-acoes">
+          <button class="chip" id="btn-limpar-clientes" title="Apaga os clientes e os pedidos deles">Limpar clientes</button>
+        </div></div>
       <article class="card" style="padding:10px 12px"><div style="overflow-x:auto"><table><thead><tr><th>Cliente</th><th class="hide-sm">Bairro</th><th class="right">Pedidos</th><th class="right">Total gasto</th><th class="hide-sm">Último pedido</th><th></th></tr></thead><tbody id="clientes-body"></tbody></table></div></article>
     </section>
 

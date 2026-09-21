@@ -203,3 +203,12 @@ main{
 @media (min-width: 2400px){
   main{ max-width: 1900px; }
 }
+
+/* Os dois botões de limpeza herdam o vermelho do "Limpar dados". */
+#btn-limpar-pedidos,#btn-limpar-clientes{
+  border-color:color-mix(in srgb,var(--rust) 45%,transparent);
+  color:var(--rust);
+}
+#btn-limpar-pedidos:hover,#btn-limpar-clientes:hover{
+  background:color-mix(in srgb,var(--rust) 14%,transparent);
+}

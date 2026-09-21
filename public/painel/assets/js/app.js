@@ -160,6 +160,35 @@
     M.limpar(); render();
     toast("Base zerada — catálogo mantido, pronto para uso real");
   });
+  /* Confirmação em duas etapas, igual à do "Limpar dados": a primeira mostra
+     o tamanho do estrago, a segunda exige digitar. Um "OK" a mais é fácil de
+     clicar sem ler; digitar exige intenção. */
+  function limpezaConfirmada(resumo, detalhe) {
+    if (!confirm(resumo + "\n\n" + detalhe + "\n\nIsto NÃO tem volta.")) return false;
+    var palavra = prompt('Para confirmar, digite LIMPAR (em maiúsculas):');
+    if (palavra === null) return false;
+    if (palavra.trim().toUpperCase() !== "LIMPAR") { toast("Cancelado — a palavra não confere"); return false; }
+    return true;
+  }
+
+  $("#btn-limpar-pedidos").addEventListener("click", function () {
+    var n = M.estado.pedidos.length;
+    if (!n) return toast("Não há pedidos para apagar");
+    if (!limpezaConfirmada("Apagar " + n + " pedidos?",
+      "Os " + M.estado.clientes.length + " clientes e o catálogo ficam.")) return;
+    M.limparPedidos(); render(); toast("Pedidos apagados — clientes e catálogo mantidos");
+  });
+
+  $("#btn-limpar-clientes").addEventListener("click", function () {
+    var nc = M.estado.clientes.length;
+    if (!nc) return toast("Não há clientes para apagar");
+    var comDono = M.estado.pedidos.filter(function (o) { return o.clienteId; }).length;
+    if (!limpezaConfirmada("Apagar " + nc + " clientes?",
+      "Os " + comDono + " pedidos ligados a eles vão junto — senão sobrariam pedidos sem dono.\n" +
+      "Pedidos vindos do site, que ainda não têm cliente, permanecem.")) return;
+    M.limparClientes(); render(); toast("Clientes apagados");
+  });
+
   $("#busca").addEventListener("input", function () { if (tela !== "pedidos" && tela !== "clientes" && this.value) ir("pedidos"); else render(); });
 
   /* ---------- Visão geral ---------- */

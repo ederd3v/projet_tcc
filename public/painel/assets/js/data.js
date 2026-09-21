@@ -208,6 +208,23 @@
     salvar();
   }
 
+  /* Apaga só os pedidos. Clientes e catálogo ficam — serve para zerar o
+     movimento sem perder a carteira que o dono já cadastrou. */
+  function limparPedidos() {
+    estado.pedidos = [];
+    salvar();
+  }
+
+  /* Apaga os clientes e os pedidos deles juntos. Apagar só os clientes
+     deixaria pedidos órfãos aparecendo como "Ainda não identificado", o que
+     confunde mais do que ajuda. Pedidos vindos do site já nascem sem cliente
+     e por isso sobrevivem — não pertencem a ninguém ainda. */
+  function limparClientes() {
+    estado.clientes = [];
+    estado.pedidos = estado.pedidos.filter(function (o) { return !o.clienteId; });
+    salvar();
+  }
+
   /* Só para apresentar: gera um movimento fictício novo a cada chamada.
      A semente vem do relógio, então os números mudam — diferente do
      "restaurar", que sempre devolve exatamente o mesmo conjunto. */
@@ -250,7 +267,8 @@
     CATEGORIAS: CATEGORIAS, ORIGENS: ORIGENS, STATUS: STATUS, PAGAMENTOS: PAGAMENTOS,
     get estado() { return estado; },
     carregar: carregar, salvar: salvar, aoFalharSalvar: aoFalharSalvar,
-    resetar: resetar, limpar: limpar, embaralhar: embaralhar,
+    resetar: resetar, limpar: limpar, limparPedidos: limparPedidos,
+    limparClientes: limparClientes, embaralhar: embaralhar,
     produto: produto, cliente: cliente, totalPedido: totalPedido,
     salvarPedido: salvarPedido, excluirPedido: excluirPedido, salvarCliente: salvarCliente
   };
