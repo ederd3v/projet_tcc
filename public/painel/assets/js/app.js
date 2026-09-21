@@ -263,7 +263,7 @@
   }
 
   function linhaPedido(o) {
-    var c = M.cliente(o.clienteId) || { nome: "Cliente removido" }, d = new Date(o.data), agora = new Date();
+    var c = M.cliente(o.clienteId) || { nome: o.origem === "Site" ? "Ainda não identificado" : "Cliente removido" }, d = new Date(o.data), agora = new Date();
     var min = Math.round((agora - d) / 6e4), quando;
     if (min < 60) quando = "há " + Math.max(min, 1) + " min";
     else if (d.toDateString() === agora.toDateString()) quando = "hoje, " + d.toTimeString().slice(0, 5);

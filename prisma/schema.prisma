@@ -56,8 +56,11 @@ model Produto {
 
 model Pedido {
   id          String       @id @default(cuid())
-  cliente     Cliente      @relation(fields: [clienteId], references: [id])
-  clienteId   String
+  // Opcional: um pedido nascido de um clique na landing não tem cliente
+  // ainda — quem clicou é anônimo até conversar no WhatsApp. O dono associa
+  // o cliente ao confirmar, e é isso que o RFC descreve (registro manual).
+  cliente     Cliente?     @relation(fields: [clienteId], references: [id])
+  clienteId   String?
   data        DateTime     @default(now())
   status      String       @default("PENDENTE")
   // Origem alimenta o gráfico "De onde vêm os pedidos"; é o dado que liga a

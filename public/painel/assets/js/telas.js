@@ -32,7 +32,7 @@
       return '<div class="col anim" data-status="' + s.id + '"><h3><span>' + A.statusPill(s.id) + '</span><span class="count">' + da.length + "</span></h3>" +
         '<p class="hint tabnum" style="margin:-6px 4px 10px">' + brl.format(soma) + (s.id === "entregue" || s.id === "cancelado" ? " · 3 dias" : "") + "</p>" +
         da.map(function (o) {
-          var c = M.cliente(o.clienteId) || { nome: "—" }, d = new Date(o.data);
+          var c = M.cliente(o.clienteId) || { nome: o.origem === "Site" ? "Ainda não identificado" : "—" }, d = new Date(o.data);
           var itens = o.itens.map(function (it) { var p = M.produto(it.pid); return p ? it.q + "× " + A.curto(p.nome) : ""; }).join(", ");
           return '<div class="ocard" draggable="true" data-id="' + o.id + '" data-action="ver-pedido" tabindex="0"><div class="r1"><span class="num">#' + o.num + '</span><span class="hint tabnum">' +
             A.dd(d) + " " + d.toTimeString().slice(0, 5) + '</span></div><div class="nm">' + esc(c.nome) + '</div><div class="hint">' + esc(itens) + '</div><div class="r3"><span class="origin">' +
@@ -64,7 +64,7 @@
 
   function detalhePedido(id) {
     var o = M.estado.pedidos.filter(function (p) { return p.id === id; })[0]; if (!o) return;
-    var c = M.cliente(o.clienteId) || { nome: "—", tel: "" }, d = new Date(o.data);
+    var c = M.cliente(o.clienteId) || { nome: o.origem === "Site" ? "Ainda não identificado" : "—", tel: "" }, d = new Date(o.data);
     var corpo = A.abrir("drawer",
       '<div style="display:flex;justify-content:space-between;align-items:center"><span class="num" style="font-size:15px">Pedido #' + o.num + '</span><button class="icon-btn" data-action="fechar" aria-label="Fechar">✕</button></div>' +
       "<h2>" + esc(c.nome) + "</h2><p class='hint tabnum'>" + d.toLocaleDateString("pt-BR") + " às " + d.toTimeString().slice(0, 5) + "</p>" +
