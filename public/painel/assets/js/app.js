@@ -245,7 +245,7 @@
     /* Origem */
     var org = {}; atual.forEach(function (o) { org[o.origem] = (org[o.origem] || 0) + 1; });
     var dadosOrg = M.ORIGENS.map(function (o) { return { rotulo: o, valor: org[o] || 0, dica: (org[o] || 0) + " pedidos · " + Math.round((org[o] || 0) / (atual.length || 1) * 100) + "%" }; });
-    G.rosca($("#chart-origem"), dadosOrg, { tamanho: 190, centro: [Math.round((org["Site"] || 0) / (atual.length || 1) * 100) + "%", "vieram do site"], aoClicar: function () { ir("origem"); } });
+    G.rosca($("#chart-origem"), dadosOrg, { tamanho: 190, centro: [String(org["Site"] || 0), "do site · " + Math.round((org["Site"] || 0) / (atual.length || 1) * 100) + "% do total"], aoClicar: function () { ir("origem"); } });
 
     /* Chamar de volta */
     var ult = {}, qtd = {};

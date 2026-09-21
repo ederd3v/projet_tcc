@@ -26,7 +26,7 @@ export function ProductCard({ id, nome, descricao, preco, fotoUrl, volumeMl }: P
         <p className="text-xs uppercase tracking-wide text-maruim-muted">{volumeMl}ml</p>
         <div className="flex items-center justify-between pt-2">
           <span className="font-display text-maruim-cream">{precoFormatado}</span>
-          <BotaoPedir produtoId={id} nome={nome} preco={preco} />
+          <BotaoPedir produtoId={id} nome={nome} preco={preco} fotoUrl={fotoUrl} volumeMl={volumeMl} />
         </div>
       </div>
     </article>
