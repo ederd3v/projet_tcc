@@ -39,3 +39,35 @@ export async function removerProduto(id: string) {
   revalidatePath("/crm/produtos");
   revalidatePath("/");
 }
+
+// Edição rápida de preço e estoque, direto no card — é como a tela de
+// Produtos do protótipo funciona: o dono digita e sai do campo, sem
+// formulário nem botão de salvar.
+const PrecoSchema = z.coerce.number().min(0).max(100000);
+const EstoqueSchema = z.coerce.number().int().min(0).max(100000);
+
+export async function editarPreco(id: string, preco: number) {
+  const valor = Math.round(PrecoSchema.parse(preco) * 100) / 100;
+  await prisma.produto.update({ where: { id }, data: { preco: valor } });
+  revalidatePath("/crm/produtos");
+  revalidatePath("/");
+  return valor;
+}
+
+export async function editarEstoque(id: string, estoque: number) {
+  const valor = EstoqueSchema.parse(estoque);
+  await prisma.produto.update({ where: { id }, data: { estoque: valor } });
+  revalidatePath("/crm/produtos");
+  return valor;
+}
+
+// Marca/desmarca o produto como destaque da home e define o selo mostrado
+// no card grande (RF07 — quem escolhe o destaque é o dono, não o código).
+export async function alternarDestaque(id: string, destaque: boolean, selo?: string | null) {
+  await prisma.produto.update({
+    where: { id },
+    data: { destaque, selo: destaque ? (selo?.trim() || "Destaque") : null },
+  });
+  revalidatePath("/crm/produtos");
+  revalidatePath("/");
+}

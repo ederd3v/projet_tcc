@@ -25,6 +25,10 @@ model Cliente {
   nome      String
   telefone  String
   email     String?
+  // Bairro orienta a entrega em Joinville; notas guardam o que o dono anota
+  // sobre o cliente (preferências, combinados). Ambos vêm do CRM.
+  bairro    String?
+  notas     String?
   criadoEm  DateTime @default(now())
   pedidos   Pedido[]
 }
@@ -43,6 +47,9 @@ model Produto {
   // no banco para o dono poder mudar pelo CRM, como pede o RF07.
   selo        String?
   destaque    Boolean      @default(false) // aparece entre os 2 destaques da home
+  // Estoque é controlado na tela de Produtos do CRM e recebe baixa quando um
+  // pedido é registrado. Sem controle de reserva: é contagem simples.
+  estoque     Int          @default(0)
   itens       ItemPedido[]
   criadoEm    DateTime     @default(now())
 }
@@ -53,6 +60,11 @@ model Pedido {
   clienteId   String
   data        DateTime     @default(now())
   status      String       @default("PENDENTE")
+  // Origem alimenta o gráfico "De onde vêm os pedidos"; é o dado que liga a
+  // landing ao CRM quando o pedido nasce de um clique no site.
+  origem      String       @default("WhatsApp direto")
+  // Pix, Dinheiro ou Cartão — só se sabe no fechamento, por isso opcional.
+  pagamento   String?
   observacao  String?
   total       Float
   itens       ItemPedido[]
