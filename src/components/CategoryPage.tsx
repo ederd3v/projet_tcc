@@ -23,6 +23,7 @@ export async function CategoryPage({ categoria, titulo, intro }: Props) {
             {produtos.map((p) => (
               <ProductCard
                 key={p.id}
+                id={p.id}
                 nome={p.nome}
                 descricao={p.descricao}
                 preco={p.preco}

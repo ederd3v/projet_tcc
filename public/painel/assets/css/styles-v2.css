@@ -1,0 +1,214 @@
+/* ===== v2: números simétricos (estilo dos CRMs de referência) ===== */
+:root{--num:"DM Sans", system-ui, sans-serif}
+.kpi .value,.share .pct,.cat .n,.src .pc,.money,.num,.tabnum,.bottle .meta,td{font-variant-numeric:tabular-nums lining-nums}
+.kpi .value,.share .pct,.cat .n{font-family:var(--num);font-weight:700;letter-spacing:-.03em}
+.kpi .value{font-size:36px}
+.hero .value{font-size:68px;letter-spacing:-.04em}
+.kpi .value small{font-family:var(--num);font-weight:600;letter-spacing:0}
+.num{font-family:var(--num);font-weight:600;color:var(--amber);font-size:13px}
+.share .pct{font-size:20px}
+.cat .n{font-size:20px}
+.kpi{cursor:pointer}
+
+/* Telas */
+.view{display:none}
+.view.on{display:block}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;padding:8px 14px;cursor:pointer;font-size:13px}
+.chip:hover{color:var(--cream)}
+.chip.on{background:var(--amber);border-color:var(--amber);color:var(--amber-ink);font-weight:600}
+.datepick{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:4px 12px;color:var(--muted)}
+.datepick input{background:transparent;border:0;color:var(--cream);font:inherit;color-scheme:dark}
+.datepick.on{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}
+.datepick.on input{color:var(--amber-ink);font-weight:600}
+.btn{border:1px solid var(--line-2);background:var(--card);color:var(--cream);border-radius:12px;padding:9px 14px;cursor:pointer;display:inline-flex;gap:7px;align-items:center;font-size:13px;text-decoration:none}
+.btn:hover{border-color:var(--amber);color:var(--amber)}
+.btn.primary{background:var(--gradient-amber);border:0;color:var(--amber-ink);font-weight:700}
+.btn.primary:hover{filter:brightness(1.06);color:var(--amber-ink)}
+.btn.danger:hover{border-color:var(--rust);color:var(--rust)}
+.btn.sm{padding:6px 10px;font-size:12px;border-radius:10px}
+.icon-btn{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;display:grid;place-items:center}
+.icon-btn:hover{color:var(--amber);border-color:var(--amber)}
+.hint{color:var(--faint);font-size:12px}
+.empty{padding:40px;text-align:center;color:var(--muted)}
+.page-title{font-family:var(--display);font-weight:700;font-size:clamp(32px,4vw,48px);margin:0}
+
+/* Gráficos SVG no estilo do Arena Dunas */
+.svgchart{position:relative;width:100%}
+.svgchart svg{display:block;width:100%;overflow:visible}
+.svgchart .gl{stroke:oklch(85% .12 85 / .1);stroke-dasharray:3 3}
+.svgchart .ax{fill:var(--faint);font-size:11px;font-family:var(--num);font-variant-numeric:tabular-nums}
+.svgchart .hit{fill:transparent;cursor:pointer}
+.svgchart .cursor{stroke:var(--line-2);stroke-width:1}
+.ctip{position:absolute;pointer-events:none;background:oklch(16% .018 75);border:1px solid var(--line-2);border-radius:12px;padding:9px 13px;font-size:12px;white-space:nowrap;opacity:0;transition:opacity .12s;z-index:6;box-shadow:0 12px 30px -10px #000;transform:translate(-50%,calc(-100% - 12px))}
+.ctip .l{color:var(--muted);margin-bottom:2px}
+.ctip .v{color:var(--amber);font-weight:700;font-size:14px;font-variant-numeric:tabular-nums}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:center;margin-top:10px;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:9px;height:9px;border-radius:50%}
+.donut-center{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;text-align:center}
+.donut-center b{display:block;font-size:26px;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.donut-center small{color:var(--muted);font-size:12px}
+.row-charts{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+
+/* Kanban de pedidos */
+.kanban{display:grid;grid-template-columns:repeat(5,minmax(220px,1fr));gap:14px;overflow-x:auto;padding-bottom:8px}
+.col{background:var(--warm);border:1px solid var(--line);border-radius:18px;padding:12px;min-height:320px}
+.col.drop{border-color:var(--amber);background:oklch(72% .14 70 / .06)}
+.col h3{margin:2px 4px 12px;font-size:13px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.col h3 .count{font-variant-numeric:tabular-nums;color:var(--muted);background:var(--card-2);border-radius:999px;padding:1px 8px;font-size:12px}
+.ocard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;cursor:grab}
+.ocard:hover{border-color:var(--line-2)}
+.ocard.dragging{opacity:.4}
+.ocard .r1{display:flex;justify-content:space-between;align-items:center}
+.ocard .nm{font-weight:600;margin:6px 0 2px}
+.ocard .r3{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+
+/* Clientes e produtos */
+.avatar-sm{width:34px;height:34px;border-radius:50%;background:var(--card-2);display:inline-grid;place-items:center;font-weight:700;color:var(--amber);font-size:12px;margin-right:10px;vertical-align:middle}
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.pcard{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.pcard.off img{opacity:.35}
+.pcard img{width:100%;aspect-ratio:1.3;object-fit:cover;background:#000}
+.pcard .b{padding:12px 14px;display:grid;gap:8px}
+.pcard .t{font-weight:600}
+.pcard .line{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.pcard input{width:96px;text-align:right}
+.switch{position:relative;width:38px;height:22px;border-radius:999px;background:var(--card-2);border:1px solid var(--line-2);cursor:pointer;flex:none;padding:0}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--muted);transition:.15s}
+.switch.on{background:var(--amber);border-color:var(--amber)}
+.switch.on::after{left:18px;background:var(--amber-ink)}
+
+/* Formulários */
+.field{display:grid;gap:6px;margin-bottom:12px}
+.field label{font-size:12px;color:var(--muted)}
+.inp,.pcard input{background:var(--bg);border:1px solid var(--line-2);border-radius:10px;color:var(--cream);font:inherit;padding:9px 11px;font-variant-numeric:tabular-nums;color-scheme:dark;width:100%}
+.inp:focus,.pcard input:focus{outline:2px solid oklch(72% .14 70 / .45);border-color:var(--amber)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.items{display:grid;gap:8px;margin-bottom:10px}
+.item{display:grid;grid-template-columns:1fr 76px 96px 34px;gap:8px;align-items:center}
+.item .it-price{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.total-line{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);padding-top:12px;margin-top:6px}
+.total-line b{font-size:26px;font-variant-numeric:tabular-nums;letter-spacing:-.03em;color:var(--amber)}
+.err{color:var(--rust);font-size:12px;min-height:16px;margin:4px 0 0}
+
+/* Modal e gaveta lateral */
+.overlay{position:fixed;inset:0;background:rgb(0 0 0 / .6);backdrop-filter:blur(3px);display:none;z-index:50;align-items:center;justify-content:center;padding:16px}
+.overlay.on{display:flex}
+.modal{background:var(--card);border:1px solid var(--line-2);border-radius:22px;width:min(640px,100%);max-height:92vh;overflow:auto;padding:24px}
+.modal h2{font-family:var(--display);font-size:26px;margin:0 0 4px}
+.modal .foot{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.overlay.drawer{justify-content:flex-end;padding:0}
+.overlay.drawer .modal{height:100vh;max-height:none;border-radius:22px 0 0 22px;width:min(460px,100%)}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:8px;font-size:13px;margin:14px 0}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;font-variant-numeric:tabular-nums}
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--cream);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:600;opacity:0;transition:.2s;z-index:60;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.s-cancelado{color:var(--rust)}
+
+/* Menu lateral: o nome aparece por cima do conteúdo, sem cortar */
+.rail{z-index:40;overflow:visible}
+.nav .tip{z-index:41;left:60px;box-shadow:0 8px 20px -8px #000;transform:translateX(-4px);transition:opacity .15s,transform .15s}
+.nav:hover .tip,.nav:focus-visible .tip{transform:none}
+.nav:focus{outline:none}
+.nav:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.nav.on .tip{display:block}
+.nav.on{box-shadow:0 8px 20px -10px oklch(93% .03 85 / .5)}
+tbody tr[data-action]{cursor:pointer}
+tbody tr[data-action]:focus-visible td{background:oklch(72% .14 70 / .08)}
+
+a.wa{color:var(--cream);text-decoration:none;white-space:nowrap}
+.pcard .line label{white-space:nowrap}
+.pcard input{width:84px;padding:7px 10px}
+.donut-center small{display:block;line-height:1.3;max-width:96px;margin:2px auto 0}
+.search input::placeholder{color:var(--faint)}
+
+/* Animações */
+@keyframes sobe{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes surge{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+@keyframes cresce{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes desenha{from{stroke-dashoffset:var(--len,2000)}to{stroke-dashoffset:0}}
+@keyframes some{from{opacity:0}to{opacity:1}}
+@keyframes gaveta{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes pop{from{transform:translateY(16px) scale(.98);opacity:0}to{transform:none;opacity:1}}
+.view.on .card,.view.on .anim{animation:sobe .5s cubic-bezier(.2,.7,.3,1) both}
+.view.on .kpis .card:nth-child(2){animation-delay:.05s}
+.view.on .kpis .card:nth-child(3){animation-delay:.1s}
+.view.on .kpis .card:nth-child(4){animation-delay:.15s}
+.view.on .row2 .card{animation-delay:.12s}
+.view.on .row3 .card,.view.on .row-charts .card{animation-delay:.2s}
+.hero{animation-name:sobe}
+.view.on .hero{animation:sobe .5s cubic-bezier(.2,.7,.3,1) both}
+.bottle{animation:surge .5s cubic-bezier(.2,.9,.3,1.2) both}
+.share .tube i{transform-origin:bottom;animation:cresce .7s cubic-bezier(.2,.7,.3,1) both .15s}
+.src .track i{transform-origin:left;animation:cresce .7s both}
+.col .ocard{animation:sobe .35s both}
+.overlay.on .modal{animation:pop .25s cubic-bezier(.2,.7,.3,1) both}
+.overlay.drawer.on .modal{animation:gaveta .28s cubic-bezier(.2,.7,.3,1) both}
+.card,.ocard,.pcard,.chip,.btn{transition:border-color .15s,background .15s,color .15s,transform .15s}
+.kpi:hover{transform:translateY(-3px);border-color:var(--line-2)}
+.hero:hover{transform:rotate(-1.2deg) translateY(-3px)}
+.pcard:hover,.ocard:hover{transform:translateY(-2px)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important}}
+
+@media (max-width:1180px){.row-charts{grid-template-columns:1fr}}
+@media (max-width:720px){
+  .two{grid-template-columns:1fr}
+  .item{grid-template-columns:1fr 64px 34px}
+  .item .it-price{display:none}
+  .kv{grid-template-columns:90px 1fr}
+  .overlay.drawer .modal{border-radius:0}
+}
+
+/* Ações sobre a base de dados, à direita da barra de período.
+   Ficam aqui porque é onde o usuário já está quando olha os números. */
+.dados-acoes{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.dados-acoes .chip{font-size:12px}
+#btn-limpar{border-color:color-mix(in srgb,var(--rust) 45%,transparent);color:var(--rust)}
+#btn-limpar:hover{background:color-mix(in srgb,var(--rust) 14%,transparent)}
+@media (max-width:760px){
+  .dados-acoes{margin-left:0;width:100%}
+  .dados-acoes .chip{flex:1}
+}
+
+/* ------------------------------------------------------------------
+   Proporção em telas largas.
+
+   O `main` tinha max-width fixo e nenhuma centralização: num monitor de
+   1920px a sobra de ~370px caía inteira do lado direito, e o painel ficava
+   encostado à esquerda. No MacBook de 13" isso não aparecia, porque a tela
+   é mais estreita que o limite.
+
+   Agora a sobra é dividida nos dois lados, o respiro lateral acompanha a
+   largura da tela, e monitores grandes ganham um limite maior — em vez de
+   desperdiçar espaço, o conteúdo se distribui.
+   ------------------------------------------------------------------ */
+main{
+  margin-inline: auto;
+  padding-inline: clamp(20px, 2.6vw, 56px);
+}
+
+@media (min-width: 1600px){
+  main{ max-width: 1560px; }
+}
+@media (min-width: 1900px){
+  main{ max-width: 1720px; }
+  /* Com mais largura, os quatro KPIs param de esticar demais e os gráficos
+     ganham proporção melhor lado a lado. */
+  .row-charts{ gap: 22px; }
+}
+@media (min-width: 2400px){
+  main{ max-width: 1900px; }
+}
+
+/* Os dois botões de limpeza herdam o vermelho do "Limpar dados". */
+#btn-limpar-pedidos,#btn-limpar-clientes{
+  border-color:color-mix(in srgb,var(--rust) 45%,transparent);
+  color:var(--rust);
+}
+#btn-limpar-pedidos:hover,#btn-limpar-clientes:hover{
+  background:color-mix(in srgb,var(--rust) 14%,transparent);
+}
