@@ -44,16 +44,24 @@ espelho local): 11 licores, 7 kombuchas, 4 ices.
 
 ```bash
 npm install
-cp .env.example .env   # já vem populado com hash de dev; ver seção Login abaixo
+cp .env.example .env       # preencher DATABASE_URL com a string do PostgreSQL
 npx prisma generate
-npx prisma db push     # cria prisma/dev.db (SQLite)
-npm run prisma:seed    # popula os 22 produtos reais
+npx prisma migrate deploy  # aplica as migrações
+npm run prisma:seed        # popula os 22 produtos reais
 npm run dev
 ```
 
-Landing: http://localhost:3000 · CRM: http://localhost:3000/crm
+> O banco é **PostgreSQL** (hoje Neon; em produção, Amazon RDS). Não há mais
+> SQLite: a hospedagem serverless tem disco efêmero e somente leitura, então
+> banco em arquivo não sobrevive ao deploy.
 
-### Login no CRM (antes do Cognito existir)
+| Endereço | O que é |
+|---|---|
+| http://localhost:3000 | landing, pública |
+| http://localhost:3000/painel | o CRM — exige login |
+| http://localhost:3000/crm/login | entrar |
+
+### Login no painel (antes do Cognito existir)
 
 `.env` de exemplo já tem `OWNER_EMAIL=jaisson@maruim.com.br`. Gere uma senha:
 
@@ -119,14 +127,32 @@ env vars acima na configuração do app → deploy.
 > máquina (credenciais nunca precisam aparecer no chat) e eu conduzo o resto
 > por aqui com os comandos da AWS CLI.
 
-## Integração landing ↔ CRM
+## Integração landing ↔ painel
 
-Diferente do site antigo (catálogo hardcoded no bundle da Lovable), aqui é
-**um projeto só com um banco só**: o CRM grava em `Produto` via Prisma, e a
-landing lê `WHERE ativo = true` direto do mesmo banco (`src/app/page.tsx`,
-`src/components/CategoryPage.tsx`). Não existe uma "integração" separada pra
-fazer depois — já é a mesma fonte de dados. É exatamente o que o RFC descreve
-em 6.5 e o `Próximos passos — Maruim.md` (seção 2) pedia como pendência.
+**Um projeto só, um banco só** — é o container único que o RFC descreve em 6.2.
+
+```
+público                          privado (middleware exige sessão)
+/                landing         /painel       o CRM (HTML em public/painel)
+/licores …                       /api/crm/*    a API dele
+      │                                │
+      │ "Pedir" → confirma             │ preço, estoque, catálogo
+      │ POST /api/pedido-do-site       │ PUT /api/crm/estado
+      ▼                                ▼
+      └────────── PostgreSQL ──────────┘
+```
+
+Os dois sentidos funcionam e foram verificados:
+
+- **painel → landing**: desligar um produto o remove do site e derruba o
+  contador do hero.
+- **landing → painel**: confirmar um pedido no site o cria na coluna "Novo",
+  com origem "Site".
+
+O painel é HTML/CSS/JS puro em `public/painel`. Ele fala com o banco só pelo
+`/api/crm/estado`, que entrega e recebe o estado inteiro no formato que as
+telas já usavam — por isso nenhuma delas precisou ser reescrita ao sair do
+`localStorage`.
 
 ## Pendências que sobraram
 

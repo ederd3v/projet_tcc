@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { STATUS_INICIAL } from "@/lib/status";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +40,7 @@ export async function POST(req: Request) {
 
     const pedido = await prisma.pedido.create({
       data: {
-        status: "novo",
+        status: STATUS_INICIAL,
         origem: "Site",
         total: produto.preco * quantidade,
         observacao: "Aberto pelo site, aguardando contato no WhatsApp",

@@ -62,7 +62,10 @@ model Pedido {
   cliente     Cliente?     @relation(fields: [clienteId], references: [id])
   clienteId   String?
   data        DateTime     @default(now())
-  status      String       @default("PENDENTE")
+  // "novo" | "confirmado" | "rota" | "entregue" | "cancelado" — os mesmos
+  // identificadores do quadro do painel (src/lib/status.ts). Valor fora da
+  // lista some do quadro sem erro, por isso a validação na API.
+  status      String       @default("novo")
   // Origem alimenta o gráfico "De onde vêm os pedidos"; é o dado que liga a
   // landing ao CRM quando o pedido nasce de um clique no site.
   origem      String       @default("WhatsApp direto")

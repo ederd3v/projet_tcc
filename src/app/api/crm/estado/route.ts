@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { ehStatusValido, STATUS_INICIAL } from "@/lib/status";
 
 export const dynamic = "force-dynamic";
 
@@ -129,7 +130,7 @@ export async function PUT(req: Request) {
               id: o.id,
               clienteId: o.clienteId,
               data: new Date(o.data),
-              status: o.status,
+              status: ehStatusValido(o.status) ? o.status : STATUS_INICIAL,
               origem: o.origem ?? "WhatsApp direto",
               pagamento: o.pagamento ?? null,
               observacao: o.obs || null,
