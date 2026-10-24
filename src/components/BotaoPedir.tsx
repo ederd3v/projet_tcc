@@ -46,14 +46,16 @@ export function BotaoPedir({ produtoId, nome, preco, fotoUrl, volumeMl }: Props)
   }
 
   async function confirmar() {
-    // A aba precisa ser aberta dentro do gesto do clique: se vier depois do
-    // await, o navegador bloqueia por achar que é popup.
-    const aba = window.open("about:blank", "_blank", "noopener,noreferrer");
+    // A conversa abre já no clique, com o link final: depois de um await o
+    // navegador bloquearia como popup. Com "noopener" o window.open sempre
+    // devolve null, então não dá para abrir uma aba vazia e preencher depois
+    // — era o que fazia a página do site também ir para o WhatsApp.
+    const mensagem = whatsappLinkForProduct(`${qtd}× ${nome}`, total);
+    window.open(mensagem, "_blank", "noopener,noreferrer");
     setEnviando(true);
 
-    const mensagem = whatsappLinkForProduct(`${qtd}× ${nome}`, total);
-
     try {
+      // keepalive: o registro termina mesmo se a pessoa fechar o site.
       await fetch("/api/pedido-do-site", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -61,12 +63,10 @@ export function BotaoPedir({ produtoId, nome, preco, fotoUrl, volumeMl }: Props)
         keepalive: true,
       });
     } catch {
-      // Perder o registro é chato; impedir a venda é pior. Segue para a conversa.
+      // Perder o registro é chato; impedir a venda é pior. A conversa já abriu.
     } finally {
       setEnviando(false);
       dialogo.current?.close();
-      if (aba) aba.location.href = mensagem;
-      else window.location.href = mensagem;
     }
   }
 
