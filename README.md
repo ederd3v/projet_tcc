@@ -47,11 +47,11 @@ npm install
 cp .env.example .env       # preencher DATABASE_URL com a string do PostgreSQL
 npx prisma generate
 npx prisma migrate deploy  # aplica as migrações
-npm run prisma:seed        # popula os 22 produtos reais
+npx prisma db seed         # popula os 22 produtos reais (lê o .env; o npm run prisma:seed não lê)
 npm run dev
 ```
 
-> O banco é **PostgreSQL** (hoje Neon; em produção, Amazon RDS). Não há mais
+> O banco é **PostgreSQL** (local: embedded-postgres ou Docker; em produção, Amazon RDS). Não há mais
 > SQLite: a hospedagem serverless tem disco efêmero e somente leitura, então
 > banco em arquivo não sobrevive ao deploy.
 
@@ -74,35 +74,49 @@ Cole o resultado em `OWNER_PASSWORD_HASH`, **escapando os `$`** com `\$`
 `$2a$10$...` — sem o escape ele é interpretado como variável e a senha nunca
 bate. Isso me custou uma hora de depuração; está documentado no `.env.example`).
 
-## O que falta — só dá pra fazer com a conta AWS
+## Hospedagem na AWS
 
-Não tenho como provisionar isso sem credenciais AWS (é conta de vocês,
-outward-facing, custo real mesmo que dentro do Free Tier). Passo a passo:
+Tudo em `us-east-1`. Precisa do AWS CLI com login feito (`aws login`) —
+credenciais nunca vão para o chat nem para o repositório.
 
 ### 1. RDS (PostgreSQL) — RFC 6.2/8
+
+O Amplify Hosting roda o SSR fora da VPC da conta, então **não alcança um RDS
+privado**. O banco fica com endpoint público e é protegido por: SSL
+obrigatório (`rds.force_ssl=1`, padrão no PostgreSQL 15+), senha aleatória
+longa, backup automático e criptografia em repouso.
+
 ```bash
 aws rds create-db-instance \
   --db-instance-identifier maruim-db \
   --db-instance-class db.t4g.micro \
   --engine postgres \
   --master-username maruim_admin \
-  --master-user-password "SENHA_FORTE_AQUI" \
+  --master-user-password "$(openssl rand -hex 24)" \
   --allocated-storage 20 \
-  --publicly-accessible false
+  --storage-encrypted \
+  --backup-retention-period 7 \
+  --publicly-accessible
 ```
-Depois: `DATABASE_URL` no `.env`/Amplify vira a connection string do RDS, e
-**trocar `provider = "sqlite"` para `provider = "postgresql"`** em
-`prisma/schema.prisma` (única mudança de schema necessária, comentada no
-próprio arquivo). Rodar `npx prisma migrate dev --name init` uma vez contra o
-RDS pra gerar o histórico de migrations (precisa de rede até o RDS — bastion,
-VPN, ou temporariamente `publicly-accessible=true` só pra essa etapa).
+(Guarde a senha gerada antes de rodar, ou redefina com `modify-db-instance`.)
+Liberar a porta 5432 no security group da instância e montar a URL:
+
+```
+postgresql://maruim_admin:SENHA@ENDPOINT:5432/postgres?sslmode=require
+```
+
+Ela vai no console do Amplify como `DATABASE_URL`. As migrações já existem em
+`prisma/migrations/` — o próprio build do Amplify roda `prisma migrate deploy`.
+O seed (22 produtos) roda uma vez desta máquina, apontando para o RDS:
+`DATABASE_URL="..." npx prisma db seed`.
 
 ### 2. S3 (fotos de produto) — RFC 6.2/9
 ```bash
 aws s3 mb s3://maruim-produtos --region us-east-1
 ```
-Preencher `S3_BUCKET_NAME` e `AWS_REGION`/`AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY`
-no `.env`. O upload (`src/app/api/upload/route.ts`) já está pronto — gera URL
+Preencher `S3_BUCKET_NAME`. **Sem chave de acesso:** o Amplify reserva o
+prefixo `AWS_` nas env vars, e o SDK usa a IAM compute role do app (com
+`s3:PutObject` no bucket). O upload (`src/app/api/upload/route.ts`) gera URL
 presignada e o browser manda o arquivo direto pro S3.
 
 ### 3. Cognito (login do dono) — RFC 6.2/9
@@ -120,12 +134,14 @@ automaticamente quando essas 3 vars existem, sem mexer em código.
 
 ### 4. Amplify Hosting — RFC 6.2/8
 Console AWS → Amplify → **Host a web app** → conectar ao repositório GitHub
-deste projeto → ele detecta o `amplify.yml` já commitado aqui → preencher as
-env vars acima na configuração do app → deploy.
+deste projeto, branch `main` → ele detecta o `amplify.yml` → preencher as env
+vars (`DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `OWNER_EMAIL`,
+`OWNER_PASSWORD_HASH`, `WHATSAPP_NUMBER`, e depois as de Cognito/S3) → deploy.
 
-> Se preferir, rode os passos 1–4 você mesmo com `aws configure` feito nesta
-> máquina (credenciais nunca precisam aparecer no chat) e eu conduzo o resto
-> por aqui com os comandos da AWS CLI.
+O `amplify.yml` copia essas variáveis para o `.env.production` no build,
+porque o SSR do Amplify não enxerga as env vars do console em runtime.
+`NEXTAUTH_URL` é circular: deploy, pegar a URL `*.amplifyapp.com`, preencher,
+redeploy.
 
 ## Integração landing ↔ painel
 

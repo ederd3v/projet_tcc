@@ -6,14 +6,20 @@ frontend:
   phases:
     preBuild:
       commands:
+        - nvm use 22
         - npm ci
-        - npx prisma generate
     build:
       commands:
-        # `db push` porque ainda não existe histórico de migrations (o dev local usa
-        # SQLite). Depois do primeiro deploy contra o RDS, trocar para
-        # `prisma migrate deploy` com migrations versionadas — ver README.md.
-        - npx prisma db push
+        # O Amplify só expõe as env vars do console durante o build. O SSR roda
+        # depois, em outro ambiente, e não as enxerga — por isso as que o
+        # servidor usa são gravadas no .env.production, que o Next carrega em
+        # runtime. Não entram AWS_*: o Amplify reserva esse prefixo, e o S3 usa
+        # a IAM compute role do app (sem chave de acesso).
+        # O sed escapa os "$" (o hash bcrypt tem vários): o Next expande $VAR
+        # dentro do .env e corromperia o valor.
+        - env | grep -E '^(DATABASE_URL|NEXTAUTH_SECRET|NEXTAUTH_URL|OWNER_EMAIL|OWNER_PASSWORD_HASH|COGNITO_CLIENT_ID|COGNITO_CLIENT_SECRET|COGNITO_ISSUER|S3_BUCKET_NAME|WHATSAPP_NUMBER)=' | sed 's/\$/\\$/g' >> .env.production || true
+        # `npm run build` = prisma generate + prisma migrate deploy + next build.
+        # O migrate deploy aplica no RDS só as migrações que faltam.
         - npm run build
   artifacts:
     baseDirectory: .next

@@ -1,13 +1,15 @@
 // Modelo de dados conforme RFC seção 6.4 (TCC - CRM bebidas.md).
 // 4 entidades: Cliente 1—N Pedido, Pedido 1—N ItemPedido, ItemPedido N—1 Produto.
 //
-// Provider: SQLite para dev local sem infra (não há Docker/Postgres nesta
-// máquina). Em produção o RFC exige PostgreSQL (Amazon RDS) — troque a linha
-// abaixo para `provider = "postgresql"` e rode `prisma migrate dev` de novo
-// contra a DATABASE_URL do RDS. É a única mudança necessária no schema.
+// Provider: PostgreSQL em todo lugar — local (embedded-postgres ou Docker) e
+// produção (Amazon RDS, RFC 6.2/8). As migrações em prisma/migrations/ são a
+// fonte de verdade; produção só roda `prisma migrate deploy`.
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  // native = máquina de dev; rhel-openssl-3.0.x = Linux do Amplify Hosting
+  // (Amazon Linux 2023), onde roda o SSR em produção.
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
