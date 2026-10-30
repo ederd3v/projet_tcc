@@ -2,18 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --font-special-elite: theme(fontFamily.display);
-}
-
 body {
-  background-color: #141110;
-  color: #f4ead9;
+  background-color: oklch(13% 0.012 70);
+  color: oklch(93% 0.03 85);
 }
 
-/* Halo âmbar suave — mesmo efeito visual que assets/custom.css do site publicado */
-.halo-bg {
-  background:
-    radial-gradient(circle at 50% 30%, rgba(217, 140, 63, 0.25), transparent 60%),
-    #141110;
+@layer utilities {
+  /* Brilho no wordmark do hero — o original usa text-shadow-glow. */
+  .text-shadow-glow {
+    text-shadow: 0 0 38px oklch(72% 0.14 70 / 0.35);
+  }
+
+  /* Halo âmbar atrás do lineup de garrafas. */
+  .halo-bg {
+    background:
+      radial-gradient(circle at 50% 30%, oklch(72% 0.14 70 / 0.16), transparent 62%),
+      oklch(13% 0.012 70);
+  }
+
+  /* Atrasos usados em cascata no hero, como no site publicado. */
+  .delay-100 { animation-delay: 0.1s; }
+  .delay-200 { animation-delay: 0.2s; }
+  .delay-300 { animation-delay: 0.3s; }
+  .delay-400 { animation-delay: 0.4s; }
+}
+
+/* Quem pediu menos movimento não recebe marquee nem flutuação. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-marquee,
+  .animate-spin-slow,
+  .animate-fade-up {
+    animation: none !important;
+  }
 }

@@ -4,9 +4,15 @@ import { authOptions } from "@/lib/auth";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-// RF07 / RFC 6.5: upload de foto de produto pro Amazon S3. O CRM (client)
-// pede uma URL presignada aqui e faz o PUT direto pro S3 — o arquivo nunca
-// passa pelo servidor Next.js.
+// RF07 / RFC 6.5: upload de foto de produto pro Amazon S3. Quem chama pede
+// uma URL presignada aqui e envia o arquivo direto pro S3 — ele nunca passa
+// pelo servidor Next.js.
+//
+// ⚠️ Hoje nenhuma tela chama esta rota. Ela servia à tela de produtos em
+// React, removida quando o painel virou o CRM do projeto. Está mantida de
+// propósito: o painel ainda não tem envio de foto, e quando tiver é aqui que
+// ele bate. Enquanto o S3 não estiver provisionado, responde 501 com uma
+// explicação em vez de falhar em silêncio.
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "não autenticado" }, { status: 401 });

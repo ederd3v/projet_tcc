@@ -1,7 +1,8 @@
 import Image from "next/image";
-import { whatsappLinkForProduct } from "@/lib/whatsapp";
+import { BotaoPedir } from "./BotaoPedir";
 
 type Props = {
+  id: string;
   nome: string;
   descricao: string;
   preco: number;
@@ -11,7 +12,7 @@ type Props = {
 
 // RF01 (mostra nome/descrição/foto/preço) + RF02 (botão WhatsApp por produto,
 // sempre com mensagem pré-preenchida — não fica em branco).
-export function ProductCard({ nome, descricao, preco, fotoUrl, volumeMl }: Props) {
+export function ProductCard({ id, nome, descricao, preco, fotoUrl, volumeMl }: Props) {
   const precoFormatado = preco.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
   return (
@@ -25,14 +26,7 @@ export function ProductCard({ nome, descricao, preco, fotoUrl, volumeMl }: Props
         <p className="text-xs uppercase tracking-wide text-maruim-muted">{volumeMl}ml</p>
         <div className="flex items-center justify-between pt-2">
           <span className="font-display text-maruim-cream">{precoFormatado}</span>
-          <a
-            href={whatsappLinkForProduct(nome, preco)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-full bg-maruim-amber px-4 py-2 text-sm font-medium text-maruim-bg hover:bg-maruim-amberLight"
-          >
-            Pedir no WhatsApp
-          </a>
+          <BotaoPedir produtoId={id} nome={nome} preco={preco} fotoUrl={fotoUrl} volumeMl={volumeMl} />
         </div>
       </div>
     </article>

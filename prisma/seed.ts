@@ -80,6 +80,26 @@ async function main() {
     });
   }
 
+
+  // Destaques da home: quais dois produtos de cada linha aparecem no card
+  // grande e com que selo. No site publicado isso era texto fixo no código;
+  // aqui vive no banco porque o RF07 põe o catálogo sob gestão do dono.
+  const DESTAQUES: Record<string, string> = {
+    "Licor de Jabuticaba": "Especial",
+    "Licor de Ameixa": "⭐ Top",
+    "Kombucha Abacaxi & Hortelã": "Bestseller",
+    "Kombucha Morango & Hibisco": "⭐ Top",
+    "Ice Limão": "Clássico",
+    "Ice Melancia": "⭐ Top",
+  };
+  for (const [nome, selo] of Object.entries(DESTAQUES)) {
+    const r = await prisma.produto.updateMany({
+      where: { nome },
+      data: { selo, destaque: true },
+    });
+    if (r.count === 0) console.warn(`  aviso: produto não encontrado para o selo "${selo}": ${nome}`);
+  }
+
   console.log(
     `Seed ok: ${licores.length} licores, ${kombuchas.length} kombuchas, ${ices.length} ices.`
   );
