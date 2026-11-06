@@ -15,6 +15,11 @@ formato, o código passa a seguir o RFC — é o caminho descrito como opção A
 roteiro (`Próximos passos — Maruim.md`, seção 1) e evita que o sistema entregue
 contradiga o próprio RFC na banca.
 
+> **Versão:** o RFC fala em Next.js 14; o projeto roda **Next.js 15.5 + React 19**
+> desde 06/11/2026. A linha 14 parou de receber correções e acumulou falhas
+> críticas (execução remota de código no otimizador de imagens, usado em todas
+> as fotos do site). A arquitetura do RFC não muda — só a versão.
+
 ## O que está implementado e testado localmente
 
 | RFC | Item | Status |

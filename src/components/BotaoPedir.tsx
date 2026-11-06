@@ -97,7 +97,7 @@ export function BotaoPedir({ produtoId, nome, preco, fotoUrl, volumeMl }: Props)
           <div className="mt-5 flex gap-4">
             {fotoUrl && (
               <div className="relative h-24 w-24 flex-none overflow-hidden rounded-lg bg-black">
-                <Image src={fotoUrl} alt={nome} fill className="object-contain p-1" />
+                <Image src={fotoUrl} alt={nome} fill sizes="96px" className="object-contain p-1" />
               </div>
             )}
             <div className="min-w-0">
