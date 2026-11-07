@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { whatsappLinkGeneric } from "@/lib/whatsapp";
+import { whatsappLinkGeneric, WHATSAPP_DISPLAY } from "@/lib/whatsapp";
 import { CATEGORIAS } from "@/lib/categorias";
 
 // Navegação do site publicado: Início, as três linhas de produto, Sobre e
@@ -85,7 +85,7 @@ export function Header() {
               rel="noopener noreferrer"
               className="rounded-sm bg-maruim-amber px-5 py-3 text-center text-[12px] font-medium uppercase tracking-[0.1em] text-maruim-bg"
             >
-              (47) 9 9240-1430
+              {WHATSAPP_DISPLAY}
             </a>
           </div>
         </details>

@@ -1,6 +1,6 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { whatsappLinkGeneric } from "@/lib/whatsapp";
+import { whatsappLinkGeneric, WHATSAPP_DISPLAY } from "@/lib/whatsapp";
 
 export default function ContatoPage() {
   return (
@@ -18,11 +18,8 @@ export default function ContatoPage() {
             rel="noopener noreferrer"
             className="mt-6 inline-block rounded-full bg-maruim-amber px-6 py-3 text-maruim-bg"
           >
-            Falar no WhatsApp: (47) 9 9240-1430
+            Falar no WhatsApp: {WHATSAPP_DISPLAY}
           </a>
-          {/* type="button": o publicado tinha um <button type="submit"> fora de
-              <form> (item aberto no HANDOFF). Aqui nem existe form nesta seção,
-              então não há como reintroduzir o bug. */}
         </section>
       </main>
       <Footer />

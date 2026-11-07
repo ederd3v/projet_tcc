@@ -113,7 +113,7 @@ em `OWNER_PASSWORD_HASH` no `.env`, trocando cada `$` por `\$` (o Next.js lê
    `main`). O `amplify.yml` já faz o build e aplica as migrações.
 3. **Variáveis no Amplify:** `DATABASE_URL`, `NEXTAUTH_SECRET`,
    `NEXTAUTH_URL` (a URL que o Amplify gerar), `OWNER_EMAIL`,
-   `OWNER_PASSWORD_HASH`, `WHATSAPP_NUMBER`.
+   `OWNER_PASSWORD_HASH`, `NEXT_PUBLIC_WHATSAPP_NUMBER`.
 
 O login pelo Amazon Cognito já está previsto em `src/lib/auth.ts`: basta
 preencher `COGNITO_CLIENT_ID`, `COGNITO_CLIENT_SECRET` e `COGNITO_ISSUER`.
