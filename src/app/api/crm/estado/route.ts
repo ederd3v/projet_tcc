@@ -22,6 +22,9 @@ export const dynamic = "force-dynamic";
 // /painel e /api/crm/* — proteger só a tela deixaria os dados saindo pela API.
 
 export async function GET() {
+  // Marcado antes da consulta: um pedido que chegue durante ela conta como
+  // "depois", e o PUT abaixo não o apaga.
+  const carregadoEm = new Date();
   const [produtos, clientes, pedidos] = await Promise.all([
     prisma.produto.findMany({ orderBy: { criadoEm: "asc" } }),
     prisma.cliente.findMany({ orderBy: { criadoEm: "asc" } }),
@@ -30,6 +33,8 @@ export async function GET() {
 
   const estado = {
     versao: 3,
+    // O painel guarda isto junto com o resto e devolve no PUT.
+    carregadoEm: carregadoEm.toISOString(),
     produtos: produtos.map((p) => ({
       id: p.id,
       nome: p.nome,
@@ -64,12 +69,13 @@ export async function GET() {
 }
 
 type EstadoRecebido = {
+  carregadoEm?: string;
   produtos?: { id: string; preco?: number; ativo?: boolean; estoque?: number }[];
   clientes?: { id: string; nome: string; tel?: string; bairro?: string; notas?: string }[];
   pedidos?: {
     id: string;
     data: string;
-    clienteId: string;
+    clienteId: string | null; // null = pedido que veio do site
     status: string;
     origem?: string;
     pagamento?: string;
@@ -100,8 +106,23 @@ export async function PUT(req: Request) {
         // Clientes e pedidos são substituídos por inteiro. É o que casa com o
         // painel, que manda sempre o estado completo — e mantém o banco como
         // espelho fiel do que está na tela, sem estado intermediário.
-        await tx.itemPedido.deleteMany({});
-        await tx.pedido.deleteMany({});
+        //
+        // Exceção: pedido do site que chegou depois que o painel carregou. O
+        // painel ainda não o conhece, então ele não vem na lista. Sem isso, um
+        // pedido feito com o painel aberto sumia no próximo salvamento
+        // (achado ao corrigir a issue #3).
+        const desde = corpo.carregadoEm ? new Date(corpo.carregadoEm) : null;
+        const idsEnviados = (corpo.pedidos ?? []).map((o) => o.id);
+        const chegaramDepois =
+          desde && !isNaN(desde.getTime())
+            ? await tx.pedido.findMany({
+                where: { clienteId: null, data: { gt: desde }, id: { notIn: idsEnviados } },
+                select: { id: true },
+              })
+            : [];
+        const preservar = chegaramDepois.map((p) => p.id);
+        await tx.itemPedido.deleteMany({ where: { pedidoId: { notIn: preservar } } });
+        await tx.pedido.deleteMany({ where: { id: { notIn: preservar } } });
 
         // Inserção em lote, não um registro por vez. Com ~400 pedidos, criar
         // um a um são centenas de idas e voltas até o banco na nuvem — a
@@ -120,15 +141,17 @@ export async function PUT(req: Request) {
         }
 
         const pedidos = corpo.pedidos ?? [];
-        // Pedido sem cliente conhecido quebraria a chave estrangeira.
+        // Pedido apontando para um cliente que não existe quebraria a chave
+        // estrangeira. Pedido sem cliente (os do site) é válido e fica
+        // (issue #3: antes eles sumiam a cada salvamento do painel).
         const idsClientesValidos = new Set((corpo.clientes ?? []).map((c) => c.id));
-        const validos = pedidos.filter((o) => idsClientesValidos.has(o.clienteId));
+        const validos = pedidos.filter((o) => !o.clienteId || idsClientesValidos.has(o.clienteId));
 
         if (validos.length) {
           await tx.pedido.createMany({
             data: validos.map((o) => ({
               id: o.id,
-              clienteId: o.clienteId,
+              clienteId: o.clienteId || null,
               data: new Date(o.data),
               status: ehStatusValido(o.status) ? o.status : STATUS_INICIAL,
               origem: o.origem ?? "WhatsApp direto",
