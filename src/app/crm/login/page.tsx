@@ -10,7 +10,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
-  const callbackUrl = params.get("callbackUrl") ?? "/painel";
+  // Só aceita caminho interno ("/painel"). Um link com callbackUrl de outro
+  // site levaria o dono para fora depois do login (open redirect).
+  const pedido = params.get("callbackUrl") ?? "";
+  const callbackUrl = pedido.startsWith("/") && !pedido.startsWith("//") ? pedido : "/painel";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [erro, setErro] = useState<string | null>(null);

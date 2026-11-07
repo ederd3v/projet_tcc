@@ -1,8 +1,5 @@
-/* charts.js — gráficos em SVG puro, no mesmo desenho dos gráficos do
-   Arena Dunas (recharts): área com traço em degradê e preenchimento que
-   some para baixo, pontos em cada dia, grade tracejada, tooltip escuro;
-   barras com a líder destacada; rosca com espaçamento entre fatias.
-   Aqui o laranja do Dunas vira o âmbar da Maruim.
+/* charts.js — gráficos em SVG puro, sem biblioteca: área (vendas por dia),
+   barras (com a líder destacada) e rosca (participação por categoria).
 
    Animação de entrada: os valores crescem a partir do zero quando o
    gráfico aparece na tela (ao abrir a página, trocar de aba, trocar o

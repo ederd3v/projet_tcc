@@ -1,184 +1,128 @@
-# Maruim Webapp — Landing + CRM (Next.js/AWS, conforme RFC)
+# Maruim — landing page + CRM
 
-Implementação do RFC do TCC ([`TCC - CRM bebidas.md`](../zerek/TCC%20-%20CRM%20bebidas/TCC%20-%20CRM%20bebidas.md),
-seções 5–10): **um projeto Next.js só**, landing pública + painel CRM, conforme
-6.2 ("Aplicação Web: Next.js 14 + TypeScript... mesmo projeto"). Substitui o
-protótipo TanStack/Cloudflare que estava publicado na Lovable
-(`~/Desktop/maruim-site`) — aquele fica só como referência de conteúdo/design.
+TCC: sistema web da **Bebidas Maruim** (licores, kombuchas e ice artesanais),
+do dono Jaisson. Um projeto só, com duas partes que usam o mesmo banco:
 
-## Por que Next.js/AWS e não o TanStack/Cloudflare
+- **Landing page** (pública): mostra o catálogo e manda o cliente para o
+  WhatsApp com a mensagem do pedido pronta.
+- **CRM** (com login): o dono acompanha pedidos, clientes, produtos e vendas.
 
-O RFC v2 já está **finalizado para entrega** (26/06/2026, ver nota do TCC) com
-a stack Next.js 14 + AWS (RDS/S3/Cognito/Amplify), decidida depois do professor
-vetar Supabase e Vercel (17/06/2026). Como o documento já foi fechado nesse
-formato, o código passa a seguir o RFC — é o caminho descrito como opção A no
-roteiro (`Próximos passos — Maruim.md`, seção 1) e evita que o sistema entregue
-contradiga o próprio RFC na banca.
+Stack (RFC, seção 6.2): **Next.js + TypeScript + Tailwind**, **PostgreSQL**
+com **Prisma**, login com **NextAuth**. Hospedagem prevista: AWS Amplify + RDS.
 
-> **Versão:** o RFC fala em Next.js 14; o projeto roda **Next.js 15.5 + React 19**
-> desde 06/11/2026. A linha 14 parou de receber correções e acumulou falhas
-> críticas (execução remota de código no otimizador de imagens, usado em todas
-> as fotos do site). A arquitetura do RFC não muda — só a versão.
+> O RFC fala em Next.js 14. O projeto roda **Next.js 15.5 + React 19** desde
+> 06/11/2026, porque a versão 14 parou de receber correções de segurança. A
+> arquitetura é a mesma.
 
-## O que está implementado e testado localmente
+---
 
-| RFC | Item | Status |
+## Como o projeto está organizado
+
+```
+src/
+  app/                    páginas e rotas da API (cada pasta = uma URL)
+    page.tsx              /            home da landing
+    licores/ kombuchas/   /licores …   uma página por linha de produto
+    ice/ sobre/ contato/
+    crm/login/            /crm/login   tela de login do dono
+    api/
+      pedido-do-site/     POST: o site registra um pedido no banco
+      crm/estado/         GET/PUT: o CRM lê e salva os dados
+      auth/               login (NextAuth)
+  components/             pedaços da landing (Header, Hero, ProductCard…)
+  lib/                    código compartilhado
+    prisma.ts             conexão com o banco
+    auth.ts               regra de login
+    categorias.ts         as 3 linhas de produto (licor, kombucha, ice)
+    status.ts             etapas do pedido (novo → entregue)
+    whatsapp.ts           monta o link do WhatsApp
+  middleware.ts           bloqueia /painel e /api/crm sem login
+
+public/
+  painel/                 o CRM: HTML + CSS + JavaScript puro
+  products/               fotos dos produtos
+
+prisma/
+  schema.prisma           as 4 tabelas: Cliente, Produto, Pedido, ItemPedido
+  migrations/             histórico de mudanças no banco
+  seed.ts                 cadastra os 22 produtos reais
+```
+
+## Como funciona
+
+```
+ Landing (pública)                    CRM (precisa de login)
+ /, /licores, /kombuchas…             /painel
+        │                                   │
+        │ cliente confirma o pedido         │ dono edita pedidos,
+        │ POST /api/pedido-do-site          │ clientes e produtos
+        │                                   │ PUT /api/crm/estado
+        ▼                                   ▼
+        └────────────── PostgreSQL ─────────┘
+```
+
+1. O visitante escolhe um produto e clica em **Pedir no WhatsApp**.
+2. Uma janela confirma a quantidade. Ao confirmar, abre o WhatsApp com a
+   mensagem pronta e o pedido é gravado no banco, com o preço tirado do
+   banco, nunca do navegador.
+3. O pedido aparece no CRM, na coluna **Novo**, com a origem "Site".
+4. Se o dono desliga um produto no CRM, ele some da landing.
+
+## Requisitos do RFC
+
+| RFC | O quê | Onde está |
 |---|---|---|
-| RF01/RF02 | Landing (6 rotas, catálogo, botão WhatsApp por produto) | ✅ |
-| RF03 | Login do dono | ✅ (fallback local; Cognito real precisa do User Pool — ver abaixo) |
-| RF04 | CRUD de clientes | ✅ |
-| RF05 | Registro de pedido (cliente + itens, ≥1 item) | ✅ |
-| RF06 | Histórico de pedidos por cliente | ✅ |
-| RF07 | CRUD de produtos + campo `ativo` | ✅ (upload S3 real precisa do bucket — ver abaixo) |
-| RF08 | Responsivo | ✅ (Tailwind, testar em 360px antes da entrega) |
-| 6.4 | 4 entidades (Cliente/Produto/Pedido/ItemPedido) | ✅ Prisma schema |
+| RF01/RF02 | Catálogo e botão de WhatsApp por produto | `src/app`, `src/components/BotaoPedir.tsx` |
+| RF03 | Login do dono | `src/lib/auth.ts`, `src/middleware.ts` |
+| RF04 | Cadastro de clientes | CRM → Clientes |
+| RF05 | Registro de pedidos | CRM → Pedidos (quadro) |
+| RF06 | Histórico de pedidos por cliente | CRM → Clientes → abrir cliente |
+| RF07 | Cadastro de produtos (ligar/desligar) | CRM → Produtos |
+| RF08 | Responsivo | Tailwind na landing, CSS com media queries no CRM |
 
-Catálogo real semeado (22 produtos, dados conferidos no `HANDOFF.md` do
-espelho local): 11 licores, 7 kombuchas, 4 ices.
+---
 
-**Bugs do site publicado (ver `HANDOFF.md`) já corrigidos aqui, de raiz:**
-- Fontes quebradas → `next/font/google` (Special Elite, Playfair Display, DM
-  Sans autohospedadas no build; sem URL externa que possa expirar).
-- WhatsApp abrindo em branco → mensagem sempre construída a partir do produto.
-- Telefone do rodapé saindo do site → `target="_blank"`.
-- `<button type="submit">` fora de `<form>` → não existe mais essa estrutura.
-- Instagram sem destino → link só aparece se `NEXT_PUBLIC_INSTAGRAM_URL`
-  estiver definida (ainda não temos o @ real, não inventamos).
+## Rodando no computador
 
-## Rodando local
+Precisa de Node.js 22 e de um PostgreSQL rodando.
 
 ```bash
 npm install
-cp .env.example .env       # preencher DATABASE_URL com a string do PostgreSQL
-npx prisma generate
-npx prisma migrate deploy  # aplica as migrações
-npx prisma db seed         # popula os 22 produtos reais (lê o .env; o npm run prisma:seed não lê)
+cp .env.example .env     # preencher DATABASE_URL e o login (ver abaixo)
+npx prisma migrate deploy
+npx prisma db seed       # cadastra os 22 produtos
 npm run dev
 ```
 
-> O banco é **PostgreSQL** (local: embedded-postgres ou Docker; em produção, Amazon RDS). Não há mais
-> SQLite: a hospedagem serverless tem disco efêmero e somente leitura, então
-> banco em arquivo não sobrevive ao deploy.
-
 | Endereço | O que é |
 |---|---|
-| http://localhost:3000 | landing, pública |
-| http://localhost:3000/painel | o CRM — exige login |
-| http://localhost:3000/crm/login | entrar |
+| http://localhost:3000 | landing |
+| http://localhost:3000/painel | CRM (pede login) |
 
-### Login no painel (antes do Cognito existir)
+**Senha do dono:** gere o hash com
+`node -e "console.log(require('bcryptjs').hashSync('SUA_SENHA', 10))"` e cole
+em `OWNER_PASSWORD_HASH` no `.env`, trocando cada `$` por `\$` (o Next.js lê
+`$` dentro do `.env` como variável).
 
-`.env` de exemplo já tem `OWNER_EMAIL=jaisson@maruim.com.br`. Gere uma senha:
+## Publicando na AWS
 
-```bash
-node -e "console.log(require('bcryptjs').hashSync('SUA_SENHA', 10))"
-```
+1. **Banco:** criar um Amazon RDS PostgreSQL (`db.t4g.micro`, com acesso
+   público, SSL e backup). A URL vai com `?sslmode=require`. Depois rodar o
+   seed uma vez: `DATABASE_URL="..." npx prisma db seed`.
+2. **Site:** no console do AWS Amplify, conectar este repositório (branch
+   `main`). O `amplify.yml` já faz o build e aplica as migrações.
+3. **Variáveis no Amplify:** `DATABASE_URL`, `NEXTAUTH_SECRET`,
+   `NEXTAUTH_URL` (a URL que o Amplify gerar), `OWNER_EMAIL`,
+   `OWNER_PASSWORD_HASH`, `WHATSAPP_NUMBER`.
 
-Cole o resultado em `OWNER_PASSWORD_HASH`, **escapando os `$`** com `\$`
-(o Next.js expande `$VAR` dentro do `.env` e um hash bcrypt começa com
-`$2a$10$...` — sem o escape ele é interpretado como variável e a senha nunca
-bate. Isso me custou uma hora de depuração; está documentado no `.env.example`).
+O login pelo Amazon Cognito já está previsto em `src/lib/auth.ts`: basta
+preencher `COGNITO_CLIENT_ID`, `COGNITO_CLIENT_SECRET` e `COGNITO_ISSUER`.
 
-## Hospedagem na AWS
+## Pendências
 
-Tudo em `us-east-1`. Precisa do AWS CLI com login feito (`aws login`) —
-credenciais nunca vão para o chat nem para o repositório.
-
-### 1. RDS (PostgreSQL) — RFC 6.2/8
-
-O Amplify Hosting roda o SSR fora da VPC da conta, então **não alcança um RDS
-privado**. O banco fica com endpoint público e é protegido por: SSL
-obrigatório (`rds.force_ssl=1`, padrão no PostgreSQL 15+), senha aleatória
-longa, backup automático e criptografia em repouso.
-
-```bash
-aws rds create-db-instance \
-  --db-instance-identifier maruim-db \
-  --db-instance-class db.t4g.micro \
-  --engine postgres \
-  --master-username maruim_admin \
-  --master-user-password "$(openssl rand -hex 24)" \
-  --allocated-storage 20 \
-  --storage-encrypted \
-  --backup-retention-period 7 \
-  --publicly-accessible
-```
-(Guarde a senha gerada antes de rodar, ou redefina com `modify-db-instance`.)
-Liberar a porta 5432 no security group da instância e montar a URL:
-
-```
-postgresql://maruim_admin:SENHA@ENDPOINT:5432/postgres?sslmode=require
-```
-
-Ela vai no console do Amplify como `DATABASE_URL`. As migrações já existem em
-`prisma/migrations/` — o próprio build do Amplify roda `prisma migrate deploy`.
-O seed (22 produtos) roda uma vez desta máquina, apontando para o RDS:
-`DATABASE_URL="..." npx prisma db seed`.
-
-### 2. S3 (fotos de produto) — RFC 6.2/9
-```bash
-aws s3 mb s3://maruim-produtos --region us-east-1
-```
-Preencher `S3_BUCKET_NAME`. **Sem chave de acesso:** o Amplify reserva o
-prefixo `AWS_` nas env vars, e o SDK usa a IAM compute role do app (com
-`s3:PutObject` no bucket). O upload (`src/app/api/upload/route.ts`) gera URL
-presignada e o browser manda o arquivo direto pro S3.
-
-### 3. Cognito (login do dono) — RFC 6.2/9
-```bash
-aws cognito-idp create-user-pool --pool-name maruim-owner-pool
-aws cognito-idp create-user-pool-client --user-pool-id <ID> \
-  --client-name maruim-webapp --generate-secret \
-  --allowed-o-auth-flows code --allowed-o-auth-scopes openid email \
-  --callback-urls https://SEU_DOMINIO/api/auth/callback/cognito
-```
-Preencher `COGNITO_CLIENT_ID`, `COGNITO_CLIENT_SECRET`, `COGNITO_ISSUER`
-(`https://cognito-idp.<region>.amazonaws.com/<user-pool-id>`) e
-`NEXT_PUBLIC_HAS_COGNITO=true` — `src/lib/auth.ts` já troca pro Cognito
-automaticamente quando essas 3 vars existem, sem mexer em código.
-
-### 4. Amplify Hosting — RFC 6.2/8
-Console AWS → Amplify → **Host a web app** → conectar ao repositório GitHub
-deste projeto, branch `main` → ele detecta o `amplify.yml` → preencher as env
-vars (`DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `OWNER_EMAIL`,
-`OWNER_PASSWORD_HASH`, `WHATSAPP_NUMBER`, e depois as de Cognito/S3) → deploy.
-
-O `amplify.yml` copia essas variáveis para o `.env.production` no build,
-porque o SSR do Amplify não enxerga as env vars do console em runtime.
-`NEXTAUTH_URL` é circular: deploy, pegar a URL `*.amplifyapp.com`, preencher,
-redeploy.
-
-## Integração landing ↔ painel
-
-**Um projeto só, um banco só** — é o container único que o RFC descreve em 6.2.
-
-```
-público                          privado (middleware exige sessão)
-/                landing         /painel       o CRM (HTML em public/painel)
-/licores …                       /api/crm/*    a API dele
-      │                                │
-      │ "Pedir" → confirma             │ preço, estoque, catálogo
-      │ POST /api/pedido-do-site       │ PUT /api/crm/estado
-      ▼                                ▼
-      └────────── PostgreSQL ──────────┘
-```
-
-Os dois sentidos funcionam e foram verificados:
-
-- **painel → landing**: desligar um produto o remove do site e derruba o
-  contador do hero.
-- **landing → painel**: confirmar um pedido no site o cria na coluna "Novo",
-  com origem "Site".
-
-O painel é HTML/CSS/JS puro em `public/painel`. Ele fala com o banco só pelo
-`/api/crm/estado`, que entrega e recebe o estado inteiro no formato que as
-telas já usavam — por isso nenhuma delas precisou ser reescrita ao sair do
-`localStorage`.
-
-## Pendências que sobraram
-
-- [ ] Provisionar RDS/S3/Cognito/Amplify (seção acima — depende da conta AWS).
-- [ ] Confirmar o @ do Instagram com o Jaisson (`NEXT_PUBLIC_INSTAGRAM_URL`).
-- [ ] Rótulos de produto com texto de IA deformado — mesma pendência do
-      espelho local, não é código deste projeto.
-- [ ] Domínio próprio (Amplify permite custom domain depois do deploy).
+- [ ] Publicar na AWS (RDS + Amplify).
+- [ ] Fotos novas das kombuchas (aguardando o material do Jaisson).
+- [ ] @ do Instagram (o link só aparece quando `NEXT_PUBLIC_INSTAGRAM_URL`
+      estiver preenchida).
+- [ ] Envio de foto de produto pelo CRM (hoje as fotos ficam em
+      `public/products`).

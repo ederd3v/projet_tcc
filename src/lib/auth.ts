@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 
 // RF03: painel CRM exige login do dono. RFC 6.2/9 especifica Amazon Cognito.
 //
-// Enquanto o User Pool não existe (ver README.md → "Hospedagem"), as vars
+// Enquanto o User Pool não existe (ver README.md → "Publicando na AWS"), as vars
 // COGNITO_* ficam vazias e o provider abaixo cai no fallback local — login
 // por e-mail + hash bcrypt guardado em .env, só pra dar pra testar o CRUD
 // localmente. Assim que o Cognito estiver provisionado, basta preencher as

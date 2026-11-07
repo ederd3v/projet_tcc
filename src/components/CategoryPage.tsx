@@ -6,10 +6,12 @@ import { prisma } from "@/lib/prisma";
 type Props = { categoria: "licor" | "kombucha" | "ice"; titulo: string; intro: string };
 
 export async function CategoryPage({ categoria, titulo, intro }: Props) {
-  // RF01: só produtos ativo=true aparecem na landing.
+  // RF01: só produtos ativo=true aparecem na landing. O desempate por
+  // criadoEm mantém a ordem fixa entre produtos de mesmo preço (os 4 ices
+  // custam o mesmo) — mesma correção da home (review @max-d3v no PR #1).
   const produtos = await prisma.produto.findMany({
     where: { categoria, ativo: true },
-    orderBy: { preco: "asc" },
+    orderBy: [{ preco: "asc" }, { criadoEm: "asc" }],
   });
 
   return (

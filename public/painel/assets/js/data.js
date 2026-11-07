@@ -1,6 +1,5 @@
-/* data.js — catálogo, dados de exemplo e persistência (localStorage).
-   Protótipo: tudo fica salvo no navegador de quem abre. No sistema real
-   isso vira o banco de dados. */
+/* data.js — estado do painel (produtos, clientes, pedidos) e a conversa com
+   o banco: carrega e salva tudo pela API /api/crm/estado. */
 (function () {
   "use strict";
 
