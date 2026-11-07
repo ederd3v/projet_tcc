@@ -149,8 +149,12 @@
      já esperavam. Por isso nenhuma tela precisou ser reescrita.
      ------------------------------------------------------------------ */
 
-  // Em produção o painel é servido pelo mesmo domínio da API e isto fica "".
-  var API = (window.MARUIM_API || "http://localhost:3000") + "/api/crm/estado";
+  // O index.html define MARUIM_API = "" (mesma origem: o painel é servido
+  // pelo próprio webapp). "" é um valor válido, por isso o teste é de tipo e
+  // não `||`: com `||` a string vazia caía no localhost (issue #4). O
+  // localhost só vale se o painel for aberto sem o index.html configurar nada.
+  var BASE = typeof window.MARUIM_API === "string" ? window.MARUIM_API : "http://localhost:3000";
+  var API = BASE + "/api/crm/estado";
 
   var estado = { versao: 3, produtos: [], clientes: [], pedidos: [] };
   var salvando = null, salvarDeNovo = false, aoFalhar = null;
