@@ -37,9 +37,10 @@ src/
     status.ts             etapas do pedido (novo → entregue)
     whatsapp.ts           monta o link do WhatsApp
   middleware.ts           bloqueia /painel e /api/crm sem login
+  painel/index.html       o HTML do CRM (servido pela rota app/painel, só com login)
 
 public/
-  painel/                 o CRM: HTML + CSS + JavaScript puro
+  painel/assets/          CSS e JavaScript puro do CRM
   products/               fotos dos produtos
 
 prisma/

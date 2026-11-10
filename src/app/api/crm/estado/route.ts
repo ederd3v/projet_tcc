@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
  * mudar o preço do produto depois, o histórico não se altera.
  */
 
-// O painel é servido pelo próprio webapp (public/painel), então painel e API
+// O painel é servido pelo próprio webapp (rota /painel), então painel e API
 // dividem a mesma origem: o cookie de sessão acompanha as chamadas sozinho e
 // não há CORS envolvido. O acesso é barrado pelo middleware, que cobre
 // /painel e /api/crm/* — proteger só a tela deixaria os dados saindo pela API.
