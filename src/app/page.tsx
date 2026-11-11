@@ -10,6 +10,8 @@ import { Hero } from "@/components/Hero";
 import { Marquee } from "@/components/Marquee";
 import { SecaoTitulo } from "@/components/SecaoTitulo";
 import { SecaoContato } from "@/components/SecaoContato";
+import { Revela } from "@/components/Revela";
+import { maisPedidoId } from "@/lib/maisPedido";
 
 export const revalidate = 0; // sempre lê do banco — catálogo é editado no CRM (RF07)
 
@@ -71,7 +73,7 @@ export default async function HomePage() {
       take: 4,
     });
 
-  const [licores, kombuchas, ices, totalLicor, totalKombucha, totalIce] = await Promise.all([
+  const [licores, kombuchas, ices, totalLicor, totalKombucha, totalIce, topId] = await Promise.all([
     destaques("licor"),
     destaques("kombucha"),
     destaques("ice"),
@@ -82,6 +84,7 @@ export default async function HomePage() {
     prisma.produto.count({ where: { categoria: "licor", ativo: true } }),
     prisma.produto.count({ where: { categoria: "kombucha", ativo: true } }),
     prisma.produto.count({ where: { categoria: "ice", ativo: true } }),
+    maisPedidoId(),
   ]);
   const contagem = { licor: totalLicor, kombucha: totalKombucha, ice: totalIce } as const;
   const produtosPorCategoria = { licor: licores, kombucha: kombuchas, ice: ices } as const;
@@ -117,15 +120,16 @@ export default async function HomePage() {
               </div>
 
               <div className="grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4 lg:gap-x-7">
-                {produtos.map((p) => (
-                  <CardDestaque
-                    key={p.id}
-                    nome={p.nome}
-                    preco={p.preco}
-                    fotoUrl={p.fotoUrl}
-                    selo={p.selo}
-                    href={href}
-                  />
+                {produtos.map((p, j) => (
+                  <Revela key={p.id} atraso={j * 110}>
+                    <CardDestaque
+                      nome={p.nome}
+                      preco={p.preco}
+                      fotoUrl={p.fotoUrl}
+                      selo={p.id === topId ? "★ Mais pedido" : p.selo}
+                      href={href}
+                    />
+                  </Revela>
                 ))}
               </div>
 

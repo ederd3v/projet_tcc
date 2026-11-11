@@ -2,6 +2,7 @@ import Link from "next/link";
 import { whatsappLinkGeneric, WHATSAPP_DISPLAY } from "@/lib/whatsapp";
 import { CATEGORIAS } from "@/lib/categorias";
 import { LogoMaruim } from "@/components/SeloMaruim";
+import { WhatsFlutuante } from "@/components/WhatsFlutuante";
 
 // Pendência aberta no HANDOFF (item 5): não temos o @ real do perfil da
 // Maruim ainda. Deixe NEXT_PUBLIC_INSTAGRAM_URL vazio até confirmar com o
@@ -137,6 +138,7 @@ export function Footer() {
           </p>
         </div>
       </div>
+      <WhatsFlutuante />
     </footer>
   );
 }

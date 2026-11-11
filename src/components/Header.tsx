@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { whatsappLinkGeneric, WHATSAPP_DISPLAY } from "@/lib/whatsapp";
 import { CATEGORIAS } from "@/lib/categorias";
 import { BotaoTema } from "@/components/BotaoTema";
@@ -18,12 +19,26 @@ const NAV = [
 
 export function Header() {
   const rota = usePathname();
+  // Ao descer a página o topo encolhe e ganha fundo sólido desfocado.
+  const [rolou, setRolou] = useState(false);
+  useEffect(() => {
+    const ver = () => setRolou(window.scrollY > 40);
+    ver();
+    window.addEventListener("scroll", ver, { passive: true });
+    return () => window.removeEventListener("scroll", ver);
+  }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-gradient-to-b from-maruim-bg/95 to-transparent transition-all duration-300 [:root[data-theme=light]_&]:bg-maruim-bg/85 [:root[data-theme=light]_&]:backdrop-blur-md">
-      <div className="flex items-center justify-between px-6 py-5 md:px-12">
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+        rolou
+          ? "bg-maruim-bg/85 shadow-lg shadow-black/10 backdrop-blur-md"
+          : "bg-gradient-to-b from-maruim-bg/95 to-transparent [:root[data-theme=light]_&]:bg-maruim-bg/85 [:root[data-theme=light]_&]:backdrop-blur-md"
+      }`}
+    >
+      <div className={`flex items-center justify-between px-6 transition-all duration-300 md:px-12 ${rolou ? "py-2.5" : "py-5"}`}>
         <Link href="/" className="flex items-center gap-3">
-          <SeloMaruim className="h-12 w-12 text-maruim-cream" />
+          <SeloMaruim className={`text-maruim-cream transition-all duration-300 ${rolou ? "h-9 w-9" : "h-12 w-12"}`} />
           <span>
             <span className="block font-display text-xl tracking-wider text-maruim-cream">Maruim</span>
             <span className="block text-[9px] uppercase tracking-[0.25em] text-maruim-muted">

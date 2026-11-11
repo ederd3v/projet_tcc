@@ -2,6 +2,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ProductCard } from "@/components/ProductCard";
 import { prisma } from "@/lib/prisma";
+import { Revela } from "@/components/Revela";
+import { maisPedidoId } from "@/lib/maisPedido";
 
 type Props = { categoria: "licor" | "kombucha" | "ice"; titulo: string; intro: string };
 
@@ -9,10 +11,13 @@ export async function CategoryPage({ categoria, titulo, intro }: Props) {
   // RF01: só produtos ativo=true aparecem na landing. O desempate por
   // criadoEm mantém a ordem fixa entre produtos de mesmo preço (os 4 ices
   // custam o mesmo) — mesma correção da home (review @max-d3v no PR #1).
-  const produtos = await prisma.produto.findMany({
-    where: { categoria, ativo: true },
-    orderBy: [{ preco: "asc" }, { criadoEm: "asc" }],
-  });
+  const [produtos, topId] = await Promise.all([
+    prisma.produto.findMany({
+      where: { categoria, ativo: true },
+      orderBy: [{ preco: "asc" }, { criadoEm: "asc" }],
+    }),
+    maisPedidoId(),
+  ]);
 
   return (
     <>
@@ -22,16 +27,18 @@ export async function CategoryPage({ categoria, titulo, intro }: Props) {
           <h1 className="font-display text-3xl text-maruim-amberLight">{titulo}</h1>
           <p className="mt-2 max-w-2xl text-maruim-cream">{intro}</p>
           <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-7">
-            {produtos.map((p) => (
-              <ProductCard
-                key={p.id}
-                id={p.id}
-                nome={p.nome}
-                descricao={p.descricao}
-                preco={p.preco}
-                fotoUrl={p.fotoUrl}
-                volumeMl={p.volumeMl}
-              />
+            {produtos.map((p, j) => (
+              <Revela key={p.id} atraso={(j % 4) * 110}>
+                <ProductCard
+                  id={p.id}
+                  nome={p.nome}
+                  descricao={p.descricao}
+                  preco={p.preco}
+                  fotoUrl={p.fotoUrl}
+                  volumeMl={p.volumeMl}
+                  selo={p.id === topId ? "★ Mais pedido" : null}
+                />
+              </Revela>
             ))}
           </div>
           {produtos.length === 0 && (

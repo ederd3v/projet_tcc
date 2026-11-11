@@ -22,7 +22,7 @@ export function CardDestaque({ nome, preco, fotoUrl, selo, href }: Props) {
   return (
     <Link href={href} className="group flex min-w-0 flex-col gap-4">
       <FotoComNotas fotoUrl={fotoUrl} nome={nome} sizes="(min-width: 1024px) 25vw, 50vw" selo={selo} />
-      <div className="flex items-baseline justify-between gap-3">
+      <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">
         <p className="min-w-0 font-display text-lg leading-tight text-maruim-cream md:text-xl">{nomeCurto}</p>
         <p className="shrink-0 font-display text-base text-maruim-amber md:text-lg">{precoFormatado}</p>
       </div>
