@@ -22,14 +22,17 @@ export function CardDestaque({ nome, preco, fotoUrl, selo, href }: Props) {
   return (
     <Link
       href={href}
-      className="group relative flex items-center justify-center overflow-hidden border border-maruim-line bg-maruim-card p-8 transition-all hover:border-maruim-amber/40"
+      className="group relative flex items-center justify-center overflow-hidden border border-maruim-line bg-maruim-card p-8 pb-32 transition-all hover:border-maruim-amber/40"
     >
+      {/* pb-32 reserva a faixa do nome/preço: as fotos reais são recortes
+          (frasco até a borda, fundo transparente) e, sem essa folga, o frasco
+          crescia por cima do texto. As fotos de IA têm margem preta própria. */}
       <Image
         src={fotoUrl}
         alt={nome}
         width={896}
         height={1200}
-        className="max-h-[440px] w-auto object-contain transition-transform duration-500 group-hover:scale-105"
+        className="max-h-[380px] w-auto object-contain drop-shadow-[0_18px_30px_rgba(0,0,0,0.55)] transition-transform duration-500 group-hover:scale-105"
       />
       <div className="absolute bottom-6 left-6">
         {selo && <p className="text-[10px] uppercase tracking-[0.2em] text-maruim-amber">{selo}</p>}
