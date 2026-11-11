@@ -48,10 +48,11 @@ export function FaixaRodape() {
       <div className="relative aspect-[16/9] max-h-screen w-full">
         <div ref={foto} className="absolute inset-0 will-change-transform">
           <Image
-            src="/products/faixa-rodape.png"
+            src="/products/faixa-rodape.jpg"
             alt="Três kombuchas e três Maruim Ice lado a lado"
             fill
             sizes="100vw"
+            quality={90}
             className="object-cover"
           />
         </div>

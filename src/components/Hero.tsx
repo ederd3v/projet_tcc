@@ -17,17 +17,18 @@ export function Hero({ contagem }: HeroProps) {
   ];
 
   return (
-    <section className="relative grid min-h-screen grid-cols-1 overflow-hidden md:grid-cols-[52%_48%]">
+    <section className="relative grid grid-cols-1 overflow-hidden md:min-h-[78vh] md:grid-cols-[46%_54%]">
       {/* Painel da esquerda: a capa (cinco licores) em tela cheia */}
       <div className="relative aspect-[3/4] overflow-hidden bg-black md:aspect-auto">
         {/* A capa é uma cena completa (fundo preto + sol âmbar) e ocupa o painel
             inteiro; o degradê à direita funde a foto com a coluna de texto. */}
         <Image
-          src="/products/lineup.png"
+          src="/products/lineup.jpg"
           alt="Cinco licores Maruim lado a lado"
           fill
           priority
-          sizes="(min-width: 768px) 52vw, 100vw"
+          sizes="(min-width: 768px) 46vw, 100vw"
+          quality={90}
           className="object-cover"
         />
         <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[10%] bg-gradient-to-r from-transparent to-maruim-bg md:block" />
@@ -59,7 +60,7 @@ export function Hero({ contagem }: HeroProps) {
       </div>
 
       {/* Coluna da direita: o texto */}
-      <div className="relative flex flex-col justify-center px-8 py-24 md:px-16">
+      <div className="relative flex flex-col justify-center px-8 py-16 md:px-16 md:pb-14 md:pt-28">
         <p className="mb-6 flex animate-fade-up items-center gap-3 text-[10px] uppercase tracking-[0.25em] text-maruim-amber">
           <span className="h-px w-8 bg-maruim-amber" />
           Joinville · Santa Catarina

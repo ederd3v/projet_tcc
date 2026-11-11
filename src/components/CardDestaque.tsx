@@ -11,34 +11,34 @@ type Props = {
   href: string;
 };
 
-// Card grande de destaque da home: a garrafa ocupa o card e o texto fica
-// ancorado no canto inferior esquerdo, sobreposto. É o formato do site
-// publicado — o card leva ao cardápio da linha, e o pedido acontece lá.
+// Card de destaque da home, no padrão da vitrine da loja de perfumes do Eder:
+// quatro por fileira (dois no celular), foto num quadro 4:5 e, embaixo, o nome
+// e o preço. O card leva ao cardápio completo da linha, onde o pedido acontece.
 export function CardDestaque({ nome, preco, fotoUrl, selo, href }: Props) {
   // Na home o nome aparece curto: "Licor de Jabuticaba" vira "Jabuticaba".
   const nomeCurto = nome.replace(/^(Licor|Kombucha|Ice)\s+(de\s+)?/i, "");
   const precoFormatado = preco.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
   return (
-    <Link
-      href={href}
-      className="group relative block aspect-square overflow-hidden border border-maruim-line bg-black transition-all hover:border-maruim-amber/40"
-    >
-      {/* As fotos são cenas quadradas (fundo preto + sol âmbar), geradas no mesmo
-          padrão para os 22 produtos: ocupam o card inteiro e o texto fica sobre
-          um degradê no rodapé. */}
-      <Image
-        src={fotoUrl}
-        alt={nome}
-        fill
-        sizes="(min-width: 768px) 50vw, 100vw"
-        className="object-cover transition-transform duration-500 group-hover:scale-105"
-      />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
-      <div className="absolute bottom-6 left-6">
-        {selo && <p className="text-[10px] uppercase tracking-[0.2em] text-maruim-amber">{selo}</p>}
-        <p className="font-display text-3xl text-maruim-cream">{nomeCurto}</p>
-        <p className="mt-1 font-display text-xl text-maruim-amber">{precoFormatado}</p>
+    <Link href={href} className="group flex min-w-0 flex-col gap-4">
+      <div className="relative aspect-[4/5] overflow-hidden border border-maruim-line bg-black transition-colors group-hover:border-maruim-amber/40">
+        <Image
+          src={fotoUrl}
+          alt={nome}
+          fill
+          sizes="(min-width: 1024px) 25vw, 50vw"
+          quality={85}
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+        {selo && (
+          <span className="absolute left-3 top-3 bg-black/60 px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-maruim-amber backdrop-blur-sm">
+            {selo}
+          </span>
+        )}
+      </div>
+      <div className="flex items-baseline justify-between gap-3">
+        <p className="min-w-0 font-display text-lg leading-tight text-maruim-cream md:text-xl">{nomeCurto}</p>
+        <p className="shrink-0 font-display text-base text-maruim-amber md:text-lg">{precoFormatado}</p>
       </div>
     </Link>
   );

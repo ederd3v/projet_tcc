@@ -75,7 +75,7 @@ export function BotaoPedir({ produtoId, nome, preco, fotoUrl, volumeMl }: Props)
       <button
         type="button"
         onClick={abrir}
-        className="rounded-sm bg-maruim-amber px-4 py-2 text-[12px] font-medium uppercase tracking-[0.1em] text-maruim-bg transition-colors hover:bg-maruim-cream"
+        className="w-full rounded-sm bg-maruim-amber px-3 py-2.5 text-[11px] font-medium uppercase tracking-[0.1em] text-maruim-bg transition-colors hover:bg-maruim-cream md:text-[12px]"
       >
         Pedir no WhatsApp
       </button>

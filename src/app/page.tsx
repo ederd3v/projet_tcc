@@ -61,20 +61,20 @@ export default async function HomePage() {
   // indefinida e a vitrine muda sozinha entre requisições (review @max-d3v).
   const porPreco = { preco: "asc" } as const;
   const desempate = { criadoEm: "asc" } as const;
-  // Os dois cards da home: primeiro os marcados como `destaque` no CRM; se
+  // Os quatro cards da home (uma fileira, como a vitrine da loja de perfumes): primeiro os marcados como `destaque` no CRM; se
   // faltar algum, completa pelos mais baratos. O desempate por criadoEm evita
   // ordem indefinida entre produtos de mesmo preço (review @max-d3v).
-  const doisDestaques = (categoria: "licor" | "kombucha" | "ice") =>
+  const destaques = (categoria: "licor" | "kombucha" | "ice") =>
     prisma.produto.findMany({
       where: { categoria, ativo: true },
       orderBy: [{ destaque: "desc" }, porPreco, desempate],
-      take: 2,
+      take: 4,
     });
 
   const [licores, kombuchas, ices, totalLicor, totalKombucha, totalIce] = await Promise.all([
-    doisDestaques("licor"),
-    doisDestaques("kombucha"),
-    doisDestaques("ice"),
+    destaques("licor"),
+    destaques("kombucha"),
+    destaques("ice"),
     // Contadas no banco, não fixas: com revalidate = 0 a home lê sempre do
     // banco, então número cravado no código contradiz o próprio RF07 — o dono
     // desativa um produto no CRM e o hero continuaria anunciando o total antigo
@@ -115,7 +115,7 @@ export default async function HomePage() {
                 <p className="max-w-xs text-sm leading-[1.8] text-maruim-muted md:text-right">{intro}</p>
               </div>
 
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div className="grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4 lg:gap-x-7">
                 {produtos.map((p) => (
                   <CardDestaque
                     key={p.id}

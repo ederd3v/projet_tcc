@@ -18,10 +18,10 @@ export async function CategoryPage({ categoria, titulo, intro }: Props) {
     <>
       <Header />
       <main className="halo-bg min-h-screen">
-        <section className="mx-auto max-w-6xl px-4 py-16">
+        <section className="mx-auto max-w-6xl px-4 pb-16 pt-28">
           <h1 className="font-display text-3xl text-maruim-amberLight">{titulo}</h1>
           <p className="mt-2 max-w-2xl text-maruim-cream">{intro}</p>
-          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-7">
             {produtos.map((p) => (
               <ProductCard
                 key={p.id}
