@@ -18,18 +18,20 @@ export function Hero({ contagem }: HeroProps) {
 
   return (
     <section className="relative grid min-h-screen grid-cols-1 overflow-hidden md:grid-cols-[52%_48%]">
-      {/* Painel da esquerda: garrafas sobre o halo */}
-      <div className="relative flex items-center justify-center overflow-hidden bg-maruim-dark pt-24 md:pt-0">
-        <div className="absolute h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle,oklch(72%_0.14_70/0.18)_0%,transparent_70%)]" />
-
+      {/* Painel da esquerda: a capa (cinco licores) em tela cheia */}
+      <div className="relative aspect-[3/4] overflow-hidden bg-black md:aspect-auto">
+        {/* A capa é uma cena completa (fundo preto + sol âmbar) e ocupa o painel
+            inteiro; o degradê à direita funde a foto com a coluna de texto. */}
         <Image
           src="/products/lineup.png"
-          alt="Linha de licores Maruim"
-          width={896}
-          height={1200}
+          alt="Cinco licores Maruim lado a lado"
+          fill
           priority
-          className="relative z-10 max-h-[80vh] w-auto animate-float object-contain"
+          sizes="(min-width: 768px) 52vw, 100vw"
+          className="object-cover"
         />
+        <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[10%] bg-gradient-to-r from-transparent to-maruim-bg md:block" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/5 bg-gradient-to-b from-transparent to-maruim-bg md:hidden" />
 
         {/* Trilho vertical — só no desktop, como no original */}
         <div className="absolute left-6 top-1/2 hidden -translate-y-1/2 flex-col gap-4 md:flex">

@@ -3,6 +3,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { prisma } from "@/lib/prisma";
 import { CardDestaque } from "@/components/CardDestaque";
+import { FaixaRodape } from "@/components/FaixaRodape";
 import { whatsappLinkGeneric } from "@/lib/whatsapp";
 import { CATEGORIAS } from "@/lib/categorias";
 import { Hero } from "@/components/Hero";
@@ -186,6 +187,7 @@ export default async function HomePage() {
         </section>
 
         <SecaoContato />
+        <FaixaRodape />
       </main>
       <Footer />
     </>
