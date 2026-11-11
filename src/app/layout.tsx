@@ -31,7 +31,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR">
+    // suppressHydrationWarning: o script abaixo pode pôr data-theme no <html>
+    // antes do React hidratar (tema salvo pelo visitante, ou ?tema=claro|escuro
+    // na URL, útil para mandar o link já no modo claro).
+    <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var q=new URLSearchParams(location.search).get('tema'),t=q==='claro'?'light':q==='escuro'?'dark':null;if(t){localStorage.setItem('maruim-tema',t)}else{t=localStorage.getItem('maruim-tema')}if(t)document.documentElement.dataset.theme=t}catch(e){}`,
+          }}
+        />
+      </head>
       <body
         className={`${specialElite.variable} ${playfair.variable} ${dmSans.variable} font-sans`}
       >

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { fotoLeve } from "./FotoComNotas";
 import { useEffect, useRef, useState } from "react";
 import { whatsappLinkForProduct } from "@/lib/whatsapp";
 
@@ -75,7 +76,7 @@ export function BotaoPedir({ produtoId, nome, preco, fotoUrl, volumeMl }: Props)
       <button
         type="button"
         onClick={abrir}
-        className="w-full rounded-sm bg-maruim-amber px-3 py-2.5 text-[11px] font-medium uppercase tracking-[0.1em] text-maruim-bg transition-colors hover:bg-maruim-cream md:text-[12px]"
+        className="w-full rounded-sm bg-maruim-amber px-3 py-2.5 text-[11px] font-medium uppercase tracking-[0.1em] text-maruim-onAmber transition-colors hover:brightness-110 md:text-[12px]"
       >
         Pedir no WhatsApp
       </button>
@@ -97,7 +98,7 @@ export function BotaoPedir({ produtoId, nome, preco, fotoUrl, volumeMl }: Props)
           <div className="mt-5 flex gap-4">
             {fotoUrl && (
               <div className="relative h-24 w-24 flex-none overflow-hidden rounded-lg bg-black">
-                <Image src={fotoUrl} alt={nome} fill sizes="96px" className="object-contain p-1" />
+                <Image src={fotoLeve(fotoUrl)} alt={nome} fill sizes="96px" className="object-contain p-1" />
               </div>
             )}
             <div className="min-w-0">

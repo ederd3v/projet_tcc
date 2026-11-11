@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { FotoComNotas } from "@/components/FotoComNotas";
 import { BotaoPedir } from "./BotaoPedir";
 
 type Props = {
@@ -16,19 +16,8 @@ export function ProductCard({ id, nome, descricao, preco, fotoUrl, volumeMl }: P
   const precoFormatado = preco.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
   return (
-    <article className="flex min-w-0 flex-col gap-4">
-      {/* Quadro 4:5 como na vitrine da loja de perfumes; sizes acompanha a grade
-          do CategoryPage (2/3/4 colunas, max-w-6xl). */}
-      <div className="relative aspect-[4/5] overflow-hidden border border-maruim-line bg-black">
-        <Image
-          src={fotoUrl}
-          alt={nome}
-          fill
-          sizes="(min-width: 1024px) 280px, (min-width: 768px) 33vw, 50vw"
-          quality={85}
-          className="object-cover"
-        />
-      </div>
+    <article className="group flex min-w-0 flex-col gap-4">
+      <FotoComNotas fotoUrl={fotoUrl} nome={nome} sizes="(min-width: 1024px) 280px, (min-width: 768px) 33vw, 50vw" />
       <div className="flex flex-1 flex-col gap-2">
         <h3 className="font-serif text-lg leading-tight text-maruim-amberLight">{nome}</h3>
         <p className="line-clamp-2 text-sm text-maruim-muted">{descricao}</p>

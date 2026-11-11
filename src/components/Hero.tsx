@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { whatsappLinkGeneric, WHATSAPP_DISPLAY } from "@/lib/whatsapp";
+import { IconeWhatsApp } from "./IconeWhatsApp";
 
 type HeroProps = {
   /** Contagem de produtos ativos por linha, vinda do banco (RF01/RF07). */
@@ -17,7 +18,8 @@ export function Hero({ contagem }: HeroProps) {
   ];
 
   return (
-    <section className="relative grid grid-cols-1 overflow-hidden md:min-h-[78vh] md:grid-cols-[46%_54%]">
+    <section className="relative overflow-hidden">
+      <div className="relative mx-auto grid max-w-[1680px] grid-cols-1 md:min-h-[78vh] md:grid-cols-[46%_54%]">
       {/* Painel da esquerda: a capa (cinco licores) em tela cheia */}
       <div className="relative aspect-[3/4] overflow-hidden bg-black md:aspect-auto">
         {/* A capa é uma cena completa (fundo preto + sol âmbar) e ocupa o painel
@@ -32,6 +34,8 @@ export function Hero({ contagem }: HeroProps) {
           className="object-cover"
         />
         <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[10%] bg-gradient-to-r from-transparent to-maruim-bg md:block" />
+        {/* em monitores mais largos que o limite, a borda esquerda também se funde */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-[8%] bg-gradient-to-l from-transparent to-maruim-bg min-[1700px]:block" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/5 bg-gradient-to-b from-transparent to-maruim-bg md:hidden" />
 
         {/* Trilho vertical — só no desktop, como no original */}
@@ -49,7 +53,7 @@ export function Hero({ contagem }: HeroProps) {
 
         {/* Selo artesanal girando devagar */}
         <div className="absolute bottom-8 right-8 z-10 flex h-24 w-24 animate-spin-slow items-center justify-center rounded-full bg-maruim-amber text-center">
-          <span className="font-display text-[10px] uppercase leading-tight tracking-[0.12em] text-maruim-bg">
+          <span className="font-display text-[10px] uppercase leading-tight tracking-[0.12em] text-maruim-onAmber">
             Artesanal
             <br />
             · desde ·
@@ -60,7 +64,7 @@ export function Hero({ contagem }: HeroProps) {
       </div>
 
       {/* Coluna da direita: o texto */}
-      <div className="relative flex flex-col justify-center px-8 py-16 md:px-16 md:pb-14 md:pt-28">
+      <div className="relative flex flex-col justify-center px-8 py-16 md:px-16 md:pb-14 md:pt-28 xl:px-24">
         <p className="mb-6 flex animate-fade-up items-center gap-3 text-[10px] uppercase tracking-[0.25em] text-maruim-amber">
           <span className="h-px w-8 bg-maruim-amber" />
           Joinville · Santa Catarina
@@ -76,7 +80,7 @@ export function Hero({ contagem }: HeroProps) {
           Licores Finos · Kombuchas · Ice
         </p>
 
-        <p className="mt-8 max-w-md animate-fade-up text-sm leading-[1.9] text-maruim-muted delay-300">
+        <p className="mt-8 max-w-md animate-fade-up text-sm leading-[1.9] text-maruim-muted delay-300 2xl:max-w-lg 2xl:text-base">
           Produção artesanal com ingredientes naturais selecionados. Sabores únicos que capturam a
           essência de cada fruta, diretamente de Joinville para sua mesa.
         </p>
@@ -84,7 +88,7 @@ export function Hero({ contagem }: HeroProps) {
         <div className="mt-10 flex animate-fade-up flex-wrap items-center gap-3 delay-400">
           <Link
             href="/licores"
-            className="rounded-sm bg-maruim-amber px-5 py-3 text-[12px] font-medium uppercase tracking-[0.1em] text-maruim-bg transition-colors hover:bg-maruim-cream"
+            className="rounded-sm bg-maruim-amber px-5 py-3 text-[12px] font-medium uppercase tracking-[0.1em] text-maruim-onAmber transition-colors hover:brightness-110"
           >
             Ver Cardápio Completo
           </Link>
@@ -92,9 +96,10 @@ export function Hero({ contagem }: HeroProps) {
             href={whatsappLinkGeneric()}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-sm border border-maruim-amber/30 px-5 py-3 text-[12px] uppercase tracking-[0.1em] text-maruim-cream transition-colors hover:border-maruim-amber hover:text-maruim-amber"
+            className="inline-flex items-center gap-2 rounded-sm border border-maruim-amber/30 px-5 py-3 text-[12px] uppercase tracking-[0.1em] text-maruim-cream transition-colors hover:border-maruim-amber hover:text-maruim-amber"
           >
-            📱 {WHATSAPP_DISPLAY}
+            <IconeWhatsApp className="h-3.5 w-3.5" />
+            {WHATSAPP_DISPLAY}
           </a>
         </div>
 
@@ -108,6 +113,7 @@ export function Hero({ contagem }: HeroProps) {
             </div>
           ))}
         </div>
+      </div>
       </div>
     </section>
   );

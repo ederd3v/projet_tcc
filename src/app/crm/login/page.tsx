@@ -48,7 +48,7 @@ function LoginForm() {
           <button
             type="button"
             onClick={() => signIn("cognito", { callbackUrl })}
-            className="mt-6 w-full rounded-full bg-maruim-amber px-4 py-2 text-maruim-bg"
+            className="mt-6 w-full rounded-full bg-maruim-amber px-4 py-2 text-maruim-onAmber"
           >
             Entrar com Cognito
           </button>

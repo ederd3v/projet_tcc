@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { whatsappLinkGeneric, WHATSAPP_DISPLAY } from "@/lib/whatsapp";
 import { CATEGORIAS } from "@/lib/categorias";
+import { LogoMaruim } from "@/components/SeloMaruim";
 
 // Pendência aberta no HANDOFF (item 5): não temos o @ real do perfil da
 // Maruim ainda. Deixe NEXT_PUBLIC_INSTAGRAM_URL vazio até confirmar com o
@@ -10,7 +11,7 @@ const INSTAGRAM_URL = process.env.NEXT_PUBLIC_INSTAGRAM_URL;
 
 const MARCA = [
   { href: "/sobre", label: "Nossa história" },
-  { href: "/contato", label: "Contato" },
+  { href: "/sobre#contato", label: "Contato" },
 ];
 
 // Nome completo da linha no rodapé ("Licores Finos"), diferente do rótulo
@@ -33,17 +34,10 @@ export function Footer() {
 
       <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:px-12 md:py-20">
         <div>
-          <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-full border border-maruim-amber/30 bg-maruim-bg font-display text-lg text-maruim-amber">
-              M
-            </span>
-            <div>
-              <p className="font-display text-xl text-maruim-cream">Bebidas Maruim</p>
-              <p className="text-[10px] uppercase tracking-[0.25em] text-maruim-muted">
-                Desde 2014 · Joinville/SC
-              </p>
-            </div>
-          </div>
+          <LogoMaruim className="h-24 w-28 text-maruim-cream" />
+          <p className="mt-4 text-[10px] uppercase tracking-[0.25em] text-maruim-muted">
+            Desde 2014 · Joinville/SC
+          </p>
           <p className="mt-6 max-w-xs text-sm leading-[1.9] text-maruim-muted">
             Bebidas artesanais feitas em pequenos lotes, com ingredientes naturais e tempo de
             verdade. Sem pressa, sem atalhos.

@@ -4,27 +4,26 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { whatsappLinkGeneric, WHATSAPP_DISPLAY } from "@/lib/whatsapp";
 import { CATEGORIAS } from "@/lib/categorias";
+import { BotaoTema } from "@/components/BotaoTema";
+import { SeloMaruim } from "@/components/SeloMaruim";
 
-// Navegação do site publicado: Início, as três linhas de produto, Sobre e
-// Contato. As categorias vêm da fonte única para não repetir rota nem rótulo
+// Navegação: Início, as três linhas de produto e Sobre (o contato agora mora
+// dentro de /sobre#contato). As categorias vêm da fonte única para não repetir rota nem rótulo
 // (review de @sidneyoliveiraj no PR #1).
 const NAV = [
   { href: "/", label: "Início" },
   ...CATEGORIAS.map((c) => ({ href: c.href, label: c.label })),
   { href: "/sobre", label: "Sobre" },
-  { href: "/contato", label: "Contato" },
 ];
 
 export function Header() {
   const rota = usePathname();
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-gradient-to-b from-maruim-bg/95 to-transparent transition-all duration-300">
+    <header className="fixed inset-x-0 top-0 z-50 bg-gradient-to-b from-maruim-bg/95 to-transparent transition-all duration-300 [:root[data-theme=light]_&]:bg-maruim-bg/85 [:root[data-theme=light]_&]:backdrop-blur-md">
       <div className="flex items-center justify-between px-6 py-5 md:px-12">
         <Link href="/" className="flex items-center gap-3">
-          <span className="flex h-11 w-11 items-center justify-center rounded-full border border-maruim-amber/25 bg-maruim-bg font-display text-lg text-maruim-amber">
-            M
-          </span>
+          <SeloMaruim className="h-12 w-12 text-maruim-cream" />
           <span>
             <span className="block font-display text-xl tracking-wider text-maruim-cream">Maruim</span>
             <span className="block text-[9px] uppercase tracking-[0.25em] text-maruim-muted">
@@ -51,16 +50,21 @@ export function Header() {
           })}
         </nav>
 
-        <a
+        <div className="hidden items-center gap-3 md:flex">
+          <BotaoTema />
+          <a
           href={whatsappLinkGeneric()}
           target="_blank"
           rel="noopener noreferrer"
-          className="hidden rounded-sm bg-maruim-amber px-5 py-2.5 text-[12px] font-medium uppercase tracking-[0.1em] text-maruim-bg transition-colors hover:bg-maruim-cream md:block"
+          className="block rounded-sm bg-maruim-amber px-5 py-2.5 text-[12px] font-medium uppercase tracking-[0.1em] text-maruim-onAmber transition-colors hover:brightness-110 "
         >
           Pedir
-        </a>
+          </a>
+        </div>
 
-        <details className="md:hidden">
+        <div className="flex items-center gap-3 md:hidden">
+        <BotaoTema />
+        <details>
           <summary
             aria-label="Menu"
             className="cursor-pointer list-none text-maruim-cream [&::-webkit-details-marker]:hidden"
@@ -83,12 +87,13 @@ export function Header() {
               href={whatsappLinkGeneric()}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-sm bg-maruim-amber px-5 py-3 text-center text-[12px] font-medium uppercase tracking-[0.1em] text-maruim-bg"
+              className="rounded-sm bg-maruim-amber px-5 py-3 text-center text-[12px] font-medium uppercase tracking-[0.1em] text-maruim-onAmber"
             >
               {WHATSAPP_DISPLAY}
             </a>
           </div>
         </details>
+        </div>
       </div>
     </header>
   );

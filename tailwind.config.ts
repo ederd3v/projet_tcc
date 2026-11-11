@@ -14,18 +14,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // As cores vêm de variáveis CSS (globals.css) para o site ter tema claro
+        // e escuro. O escuro mantém os mesmos oklch do site publicado.
         maruim: {
-          bg: "oklch(13% 0.012 70 / <alpha-value>)", // --background
-          dark: "oklch(16% 0.018 75 / <alpha-value>)", // --dark, painel do hero
-          card: "oklch(20% 0.022 75 / <alpha-value>)", // --card
-          amber: "oklch(72% 0.14 70 / <alpha-value>)", // --primary
-          cream: "oklch(93% 0.03 85 / <alpha-value>)", // --cream / --foreground
-          muted: "oklch(62% 0.05 75 / <alpha-value>)", // --muted-foreground / --muted2
-          line: "oklch(85% 0.12 85 / 0.12)", // --border
+          bg: "oklch(var(--m-bg) / <alpha-value>)", // --background
+          dark: "oklch(var(--m-dark) / <alpha-value>)", // --dark, painel do hero
+          card: "oklch(var(--m-card) / <alpha-value>)", // --card
+          amber: "oklch(var(--m-amber) / <alpha-value>)", // --primary
+          cream: "oklch(var(--m-cream) / <alpha-value>)", // --cream / --foreground (texto)
+          muted: "oklch(var(--m-muted) / <alpha-value>)", // --muted-foreground / --muted2
+          line: "oklch(var(--m-line))", // --border (já leva a transparência)
+          // texto sobre fundo âmbar: escuro nos dois temas, para dar contraste
+          onAmber: "oklch(15% 0.015 70 / <alpha-value>)",
         },
         // aliases mantidos para não quebrar telas já escritas (CRM, /sobre…)
-        "maruim-bgAlt": "oklch(16% 0.018 75 / <alpha-value>)",
-        "maruim-amberLight": "oklch(80% 0.11 78 / <alpha-value>)",
+        "maruim-bgAlt": "oklch(var(--m-dark) / <alpha-value>)",
+        "maruim-amberLight": "oklch(var(--m-amber-light) / <alpha-value>)",
       },
       fontFamily: {
         // Special Elite — a "máquina de escrever" da marca: wordmark e títulos

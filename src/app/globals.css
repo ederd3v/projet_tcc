@@ -2,9 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Tema: escuro é o padrão da marca; o claro entra com data-theme="light" no <html>
+   (botão no header, escolha salva no navegador). Valores em "L C H" do oklch. */
+:root {
+  --m-bg: 13% 0.012 70;
+  --m-dark: 16% 0.018 75;
+  --m-card: 20% 0.022 75;
+  --m-amber: 72% 0.14 70;
+  --m-amber-light: 80% 0.11 78;
+  --m-cream: 93% 0.03 85;
+  --m-muted: 62% 0.05 75;
+  --m-line: 85% 0.12 85 / 0.12;
+  --m-halo: 72% 0.14 70 / 0.16;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --m-bg: 97% 0.008 85;
+  --m-dark: 94% 0.012 80;
+  --m-card: 99.5% 0.004 85;
+  --m-amber: 57% 0.14 58;
+  --m-amber-light: 48% 0.12 55;
+  --m-cream: 20% 0.02 60;
+  --m-muted: 42% 0.03 65;
+  --m-line: 30% 0.04 60 / 0.18;
+  --m-halo: 72% 0.14 70 / 0.12;
+  color-scheme: light;
+}
+
 body {
-  background-color: oklch(13% 0.012 70);
-  color: oklch(93% 0.03 85);
+  background-color: oklch(var(--m-bg));
+  color: oklch(var(--m-cream));
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 @layer utilities {
@@ -12,12 +41,15 @@ body {
   .text-shadow-glow {
     text-shadow: 0 0 38px oklch(72% 0.14 70 / 0.35);
   }
+  :root[data-theme="light"] .text-shadow-glow {
+    text-shadow: none;
+  }
 
-  /* Halo âmbar atrás do lineup de garrafas. */
+  /* Halo âmbar de fundo (páginas internas). */
   .halo-bg {
     background:
-      radial-gradient(circle at 50% 30%, oklch(72% 0.14 70 / 0.16), transparent 62%),
-      oklch(13% 0.012 70);
+      radial-gradient(circle at 50% 30%, oklch(var(--m-halo)), transparent 62%),
+      oklch(var(--m-bg));
   }
 
   /* Atrasos usados em cascata no hero, como no site publicado. */

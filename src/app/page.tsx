@@ -102,6 +102,7 @@ export default async function HomePage() {
               key={categoria}
               className={`px-6 py-24 md:px-12 md:py-28 ${i > 0 ? "border-t border-maruim-line" : ""}`}
             >
+              <div className="mx-auto max-w-7xl">
               <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
                 <div>
                   <p className="flex items-center gap-3 text-[10px] uppercase tracking-[0.22em] text-maruim-amber">
@@ -133,6 +134,7 @@ export default async function HomePage() {
                   Ver todos os {contagem[categoria]} sabores →
                 </Link>
               </div>
+              </div>
             </section>
           );
         })}
@@ -157,6 +159,7 @@ export default async function HomePage() {
         </section>
 
         <section className="border-t border-maruim-line px-6 py-24 md:px-12 md:py-28">
+          <div className="mx-auto max-w-7xl">
           <SecaoTitulo eyebrow="O que dizem" titulo="Quem prova," destaque="volta." />
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {DEPOIMENTOS.map((d) => (
@@ -183,6 +186,7 @@ export default async function HomePage() {
                 </div>
               </div>
             ))}
+          </div>
           </div>
         </section>
 
