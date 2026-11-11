@@ -22,18 +22,19 @@ export function CardDestaque({ nome, preco, fotoUrl, selo, href }: Props) {
   return (
     <Link
       href={href}
-      className="group relative flex items-center justify-center overflow-hidden border border-maruim-line bg-maruim-card p-8 pb-32 transition-all hover:border-maruim-amber/40"
+      className="group relative block aspect-square overflow-hidden border border-maruim-line bg-black transition-all hover:border-maruim-amber/40"
     >
-      {/* pb-32 reserva a faixa do nome/preço: as fotos reais são recortes
-          (frasco até a borda, fundo transparente) e, sem essa folga, o frasco
-          crescia por cima do texto. As fotos de IA têm margem preta própria. */}
+      {/* As fotos são cenas quadradas (fundo preto + sol âmbar), geradas no mesmo
+          padrão para os 22 produtos: ocupam o card inteiro e o texto fica sobre
+          um degradê no rodapé. */}
       <Image
         src={fotoUrl}
         alt={nome}
-        width={896}
-        height={1200}
-        className="max-h-[380px] w-auto object-contain drop-shadow-[0_18px_30px_rgba(0,0,0,0.55)] transition-transform duration-500 group-hover:scale-105"
+        fill
+        sizes="(min-width: 768px) 50vw, 100vw"
+        className="object-cover transition-transform duration-500 group-hover:scale-105"
       />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
       <div className="absolute bottom-6 left-6">
         {selo && <p className="text-[10px] uppercase tracking-[0.2em] text-maruim-amber">{selo}</p>}
         <p className="font-display text-3xl text-maruim-cream">{nomeCurto}</p>

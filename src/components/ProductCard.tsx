@@ -25,7 +25,7 @@ export function ProductCard({ id, nome, descricao, preco, fotoUrl, volumeMl }: P
           alt={nome}
           fill
           sizes="(min-width: 1024px) 370px, (min-width: 640px) 50vw, 100vw"
-          className="object-contain p-4"
+          className="object-cover"
         />
       </div>
       <div className="space-y-2 p-4">
