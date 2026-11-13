@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Página /licores: a vitrine de licores.
+//  ⚙️  COMO FUNCIONA: Só chama o CategoryPage com a categoria 'licor'. A lógica fica num componente só, usado pelas 3 linhas.
+//  🎓 NA BANCA: Reaproveitamento: licores, kombuchas e ice são a mesma página com dados diferentes.
+//  ──────────────────────────────────────────────────────────────────────
 import { CategoryPage } from "@/components/CategoryPage";
 
 export const revalidate = 0;

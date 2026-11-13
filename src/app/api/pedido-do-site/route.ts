@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: API que REGISTRA o pedido feito pela landing.
+//  ⚙️  COMO FUNCIONA: Quando o cliente confirma no 'Pedir no WhatsApp', o site manda produto e quantidade para cá; o pedido entra no banco como 'novo', origem 'Site'. O preço vem do banco, nunca do navegador.
+//  🎓 NA BANCA: É o que liga landing e CRM: o pedido do site aparece no painel na hora.
+//  ──────────────────────────────────────────────────────────────────────
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";

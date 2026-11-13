@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: RODAPÉ do site (logo, links, contato e o botão flutuante do WhatsApp).
+//  ⚙️  COMO FUNCIONA: Aparece em todas as páginas públicas. O Instagram só aparece quando a variável com o @ real for preenchida.
+//  🎓 NA BANCA: Nada de link quebrado: o que ainda não existe fica escondido.
+//  ──────────────────────────────────────────────────────────────────────
 import Link from "next/link";
 import { whatsappLinkGeneric, WHATSAPP_DISPLAY } from "@/lib/whatsapp";
 import { CATEGORIAS } from "@/lib/categorias";

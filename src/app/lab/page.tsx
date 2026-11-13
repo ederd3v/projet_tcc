@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: /lab: vitrine de ideias de design (só no computador).
+//  ⚙️  COMO FUNCIONA: Mostra efeitos com liga/desliga para escolher o que entra no site. Em produção responde 404.
+//  🎓 NA BANCA: Ferramenta interna de decisão de design; não faz parte do site público.
+//  ──────────────────────────────────────────────────────────────────────
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";

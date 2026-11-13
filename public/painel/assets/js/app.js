@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: O NÚCLEO do painel: menu lateral, filtro de período, janelas e a Visão geral.
+//  ⚙️  COMO FUNCIONA: Liga as telas, guarda a tela atual e redesenha tudo quando os dados mudam.
+//  🎓 NA BANCA: JavaScript puro, sem framework: o painel é leve e abre rápido.
+//  ──────────────────────────────────────────────────────────────────────
 /* app.js — núcleo: navegação, período, utilidades, modais e a visão geral. */
 (function () {
   "use strict";

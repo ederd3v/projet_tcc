@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: A HOME (página inicial) do site.
+//  ⚙️  COMO FUNCIONA: Server Component: roda no servidor, lê o banco (Prisma -> PostgreSQL/RDS) e entrega o HTML pronto. Monta: capa (Hero), faixa que corre, destaques de cada linha, 'como pedir', depoimentos e contato.
+//  🎓 NA BANCA: O catálogo da home vem do banco: o que o Jaisson muda no CRM aparece aqui sem mexer em código (RF01/RF07).
+//  ──────────────────────────────────────────────────────────────────────
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -154,7 +159,8 @@ export default async function HomePage() {
           <div className="mx-auto grid max-w-5xl grid-cols-1 gap-px bg-maruim-line md:grid-cols-3">
             {PASSOS.map((passo) => (
               <div key={passo.numero} className="bg-maruim-dark p-10 transition-colors hover:bg-maruim-card">
-                <p className="font-serif text-6xl font-bold text-maruim-amber/30">{passo.numero}</p>
+                {/* amber/60 (antes /30): número grande precisa de 3:1 de contraste */}
+                <p className="font-serif text-6xl font-bold text-maruim-amber/60">{passo.numero}</p>
                 <p className="mt-4 font-display text-2xl text-maruim-cream">{passo.titulo}</p>
                 <p className="mt-3 text-sm leading-[1.8] text-maruim-muted">{passo.descricao}</p>
               </div>

@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Os GRÁFICOS do painel (vendas por dia, mais vendidos, categorias).
+//  ⚙️  COMO FUNCIONA: Desenha em SVG direto, sem biblioteca de gráficos.
+//  🎓 NA BANCA: Zero dependência externa: nada para atualizar ou quebrar.
+//  ──────────────────────────────────────────────────────────────────────
 /* charts.js — gráficos em SVG puro, sem biblioteca: área (vendas por dia),
    barras (com a líder destacada) e rosca (participação por categoria).
 

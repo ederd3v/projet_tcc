@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Página /sobre: história da Maruim, fotos reais e o contato.
+//  ⚙️  COMO FUNCIONA: Página estática (não lê banco). O antigo /contato redireciona para cá (#contato).
+//  🎓 NA BANCA: Fotos reais dos produtos dão credibilidade; o contato junto evita uma página a mais.
+//  ──────────────────────────────────────────────────────────────────────
 import type { Metadata } from "next";
 import Image from "next/image";
 import { Header } from "@/components/Header";

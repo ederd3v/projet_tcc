@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: CAPA da home: foto das garrafas + título + botões.
+//  ⚙️  COMO FUNCIONA: A foto é o maior elemento da tela (LCP), por isso baixa com prioridade alta. Os números ('11+ sabores') vêm do banco.
+//  🎓 NA BANCA: Otimizada para o Lighthouse: carrega primeiro, em AVIF/WebP, no tamanho certo de cada tela.
+//  ──────────────────────────────────────────────────────────────────────
 import Image from "next/image";
 import Link from "next/link";
 import { whatsappLinkGeneric, WHATSAPP_DISPLAY } from "@/lib/whatsapp";
@@ -29,8 +34,13 @@ export function Hero({ contagem }: HeroProps) {
           alt="Cinco licores Maruim lado a lado"
           fill
           priority
+          // A capa é o LCP da home: fetchPriority alto faz o navegador baixá-la
+          // antes do resto (o Lighthouse marcava 1,4 s de espera para começar).
+          // Qualidade 75 em AVIF/WebP não tem diferença visível no fundo escuro e
+          // corta ~60% do peso no celular.
+          fetchPriority="high"
           sizes="(min-width: 768px) 46vw, 100vw"
-          quality={90}
+          quality={75}
           className="object-cover"
         />
         <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[10%] bg-gradient-to-r from-transparent to-maruim-bg md:block" />

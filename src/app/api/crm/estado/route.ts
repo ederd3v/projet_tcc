@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: API do CRM: o painel lê e salva TUDO por aqui.
+//  ⚙️  COMO FUNCIONA: GET devolve produtos, clientes e pedidos do banco; PUT grava o que o dono editou no painel. Protegida pelo middleware (exige login).
+//  🎓 NA BANCA: É a ponte painel <-> banco: o painel é só a tela, quem guarda os dados é o PostgreSQL.
+//  ──────────────────────────────────────────────────────────────────────
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ehStatusValido, STATUS_INICIAL } from "@/lib/status";

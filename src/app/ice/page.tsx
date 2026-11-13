@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Página /ice: a vitrine das bebidas Ice.
+//  ⚙️  COMO FUNCIONA: Só chama o CategoryPage com a categoria 'ice'.
+//  🎓 NA BANCA: Mesmo componente das outras linhas (sem código repetido).
+//  ──────────────────────────────────────────────────────────────────────
 import { CategoryPage } from "@/components/CategoryPage";
 
 export const revalidate = 0;

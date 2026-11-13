@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Foto do produto que, ao passar o mouse (ou tocar 'Notas'), mostra as notas de sabor.
+//  ⚙️  COMO FUNCIONA: Troca a foto pelas notas (sabor, combina com, como servir) que estão em src/lib/notas.ts.
+//  🎓 NA BANCA: Ideia trazida da loja de perfumes: informação extra sem poluir o card.
+//  ──────────────────────────────────────────────────────────────────────
 "use client";
 
 import Image from "next/image";
@@ -48,8 +53,10 @@ export function FotoComNotas({ fotoUrl, nome, sizes, selo }: Props) {
         />
       </div>
 
+      {/* selo e botão com fundo sólido (sem backdrop-blur): o desfoque repetido em
+          ~16 cards pesava no celular (Lighthouse: 0,8 s de "Style & Layout"). */}
       {selo && (
-        <span className="absolute left-3 top-3 z-10 bg-black/60 px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-[oklch(80%_0.12_75)] backdrop-blur-sm">
+        <span className="absolute left-3 top-3 z-10 bg-black/75 px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-[oklch(80%_0.12_75)]">
           {selo}
         </span>
       )}
@@ -81,7 +88,7 @@ export function FotoComNotas({ fotoUrl, nome, sizes, selo }: Props) {
               setAberto((v) => !v);
             }}
             aria-expanded={aberto}
-            className="absolute bottom-3 right-3 z-10 rounded-full border border-white/25 bg-black/55 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-white/90 backdrop-blur-sm [@media(hover:hover)]:hidden"
+            className="absolute bottom-3 right-3 z-10 rounded-full border border-white/25 bg-black/70 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-white/90 [@media(hover:hover)]:hidden"
           >
             {aberto ? "Foto" : "Notas"}
           </button>

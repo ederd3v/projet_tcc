@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Card de DESTAQUE da home (grade de 4 por linha).
+//  ⚙️  COMO FUNCIONA: Mostra foto, nome curto e preço; o clique leva ao cardápio completo da linha.
+//  🎓 NA BANCA: A home mostra só os destaques; o pedido acontece na página da linha.
+//  ──────────────────────────────────────────────────────────────────────
 import { FotoComNotas } from "@/components/FotoComNotas";
 import Link from "next/link";
 

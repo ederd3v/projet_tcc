@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Os DADOS do painel (CRM): produtos, clientes e pedidos.
+//  ⚙️  COMO FUNCIONA: Ao abrir, busca tudo em GET /api/crm/estado; a cada alteração, salva com PUT na mesma API. É o único arquivo do painel que conversa com o servidor.
+//  🎓 NA BANCA: Separação de responsabilidades: dados aqui, telas em telas.js, gráficos em charts.js.
+//  ──────────────────────────────────────────────────────────────────────
 /* data.js — estado do painel (produtos, clientes, pedidos) e a conversa com
    o banco: carrega e salva tudo pela API /api/crm/estado. */
 (function () {

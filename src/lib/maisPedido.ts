@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Descobre o produto MAIS PEDIDO (selo '★ Mais pedido').
+//  ⚙️  COMO FUNCIONA: Soma as unidades dos pedidos do CRM (cancelados não contam) e devolve o campeão, se tiver 3+ unidades.
+//  🎓 NA BANCA: Dado real do CRM alimentando a vitrine: o site 'aprende' com as vendas.
+//  ──────────────────────────────────────────────────────────────────────
 import { prisma } from "@/lib/prisma";
 
 // Produto com mais unidades nos pedidos do CRM (cancelados não contam). Vira o

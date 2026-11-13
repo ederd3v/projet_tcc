@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Efeito de SURGIR ao rolar (sobe + aparece).
+//  ⚙️  COMO FUNCIONA: Usa IntersectionObserver: quando o elemento entra na tela, ganha a animação uma vez só.
+//  🎓 NA BANCA: Leve (sem biblioteca) e desligado para quem pediu menos movimento.
+//  ──────────────────────────────────────────────────────────────────────
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";

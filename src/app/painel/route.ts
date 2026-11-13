@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Entrega a tela do CRM (o painel) em /painel.
+//  ⚙️  COMO FUNCIONA: Lê o HTML do painel (src/painel/index.html) e devolve. Antes disso o middleware já conferiu o login.
+//  🎓 NA BANCA: O painel só existe para quem está logado: sem sessão, volta para a tela de login.
+//  ──────────────────────────────────────────────────────────────────────
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 

@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Bloco de CONTATO (WhatsApp, cidade, horário).
+//  ⚙️  COMO FUNCIONA: Usado na home e na página Sobre. O botão é verde-WhatsApp para ser reconhecido na hora.
+//  🎓 NA BANCA: Um componente, dois lugares: sem repetição.
+//  ──────────────────────────────────────────────────────────────────────
 import { SecaoTitulo } from "./SecaoTitulo";
 import { whatsappLinkGeneric, WHATSAPP_DISPLAY } from "@/lib/whatsapp";
 import { IconeWhatsApp } from "./IconeWhatsApp";

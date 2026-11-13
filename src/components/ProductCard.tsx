@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: CARD de um produto: foto, nome, preço e botão de pedido.
+//  ⚙️  COMO FUNCIONA: Recebe os dados prontos e usa FotoComNotas (foto + notas) e BotaoPedir (WhatsApp).
+//  🎓 NA BANCA: RF01 (mostrar o produto) + RF02 (pedido pelo WhatsApp com mensagem pronta).
+//  ──────────────────────────────────────────────────────────────────────
 import { FotoComNotas } from "@/components/FotoComNotas";
 import { BotaoPedir } from "./BotaoPedir";
 

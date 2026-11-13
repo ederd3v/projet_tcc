@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Configuração do LOGIN (NextAuth).
+//  ⚙️  COMO FUNCIONA: Compara e-mail e senha digitados com OWNER_EMAIL e o hash bcrypt de OWNER_PASSWORD_HASH (variáveis do Amplify). Já deixa o Cognito pronto para quando for criado.
+//  🎓 NA BANCA: Senha nunca é guardada, só o hash. Trocar para Cognito não exige mudar código.
+//  ──────────────────────────────────────────────────────────────────────
 import type { NextAuthOptions } from "next-auth";
 import CognitoProvider from "next-auth/providers/cognito";
 import CredentialsProvider from "next-auth/providers/credentials";

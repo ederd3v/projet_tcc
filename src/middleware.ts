@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: PORTEIRO do sistema: barra quem não está logado.
+//  ⚙️  COMO FUNCIONA: Roda antes de qualquer página. Para /painel, /crm e /api/crm confere a sessão; sem login, manda para /crm/login.
+//  🎓 NA BANCA: Segurança no servidor: proteger só a tela não basta, a API também é bloqueada (RNF03).
+//  ──────────────────────────────────────────────────────────────────────
 import { withAuth } from "next-auth/middleware";
 
 // RNF03 / RF03: área interna sem sessão válida → redireciona pro login.

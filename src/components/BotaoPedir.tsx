@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Botão 'PEDIR NO WHATSAPP' (o coração do fluxo de venda).
+//  ⚙️  COMO FUNCIONA: Abre um resumo (foto, quantidade, total). Ao confirmar: abre o WhatsApp do Jaisson com a mensagem pronta E registra o pedido no CRM pela API /api/pedido-do-site.
+//  🎓 NA BANCA: Um clique do cliente vira pedido no painel: landing e CRM conectados.
+//  ──────────────────────────────────────────────────────────────────────
 "use client";
 
 import Image from "next/image";

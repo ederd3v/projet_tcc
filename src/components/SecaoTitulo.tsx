@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: TÍTULO padrão das seções (filete + título + palavra em destaque).
+//  ⚙️  COMO FUNCIONA: Recebe os textos e aplica sempre o mesmo visual.
+//  🎓 NA BANCA: Identidade visual consistente em todo o site.
+//  ──────────────────────────────────────────────────────────────────────
 import type { ReactNode } from "react";
 
 type Props = {

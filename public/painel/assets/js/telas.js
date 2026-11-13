@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: As TELAS do CRM: Pedidos (quadro kanban), Clientes, Produtos e Origem.
+//  ⚙️  COMO FUNCIONA: Desenha cada tela a partir dos dados de data.js e trata os formulários (novo pedido, editar cliente, ligar/desligar produto).
+//  🎓 NA BANCA: Cobre os RF04 a RF07: clientes, pedidos, histórico e catálogo.
+//  ──────────────────────────────────────────────────────────────────────
 /* telas.js — Pedidos, Clientes, Produtos, Origem e os formulários. */
 (function () {
   "use strict";

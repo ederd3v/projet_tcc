@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Faixa final da home: quadro que CRESCE até a tela cheia ao rolar.
+//  ⚙️  COMO FUNCIONA: Mede o quanto a seção já rolou e usa isso para aumentar o quadro; no fim, botões para Kombuchas e Ice.
+//  🎓 NA BANCA: Respeita quem pede menos movimento (acessibilidade).
+//  ──────────────────────────────────────────────────────────────────────
 "use client";
 
 import Image from "next/image";

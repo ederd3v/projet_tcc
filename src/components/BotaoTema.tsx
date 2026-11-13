@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Botão SOL/LUA: troca tema claro e escuro.
+//  ⚙️  COMO FUNCIONA: Salva a escolha no navegador (localStorage) e aplica as cores via variáveis CSS.
+//  🎓 NA BANCA: Acessibilidade e conforto visual sem duplicar estilos.
+//  ──────────────────────────────────────────────────────────────────────
 "use client";
 
 import { useEffect, useState } from "react";

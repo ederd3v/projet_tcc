@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Tela de LOGIN do dono (entrada do CRM).
+//  ⚙️  COMO FUNCIONA: Formulário e-mail + senha que chama o NextAuth. Se der certo, leva ao /painel.
+//  🎓 NA BANCA: RF03: só o dono entra no CRM. A senha fica guardada como hash bcrypt, nunca em texto.
+//  ──────────────────────────────────────────────────────────────────────
 "use client";
 
 import { Suspense, useState } from "react";

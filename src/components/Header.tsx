@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: CABEÇALHO do site (logo, menu, tema, botão Pedir).
+//  ⚙️  COMO FUNCIONA: Componente de cliente: ao rolar a página ele encolhe e ganha fundo sólido. No celular vira menu sanfona.
+//  🎓 NA BANCA: A navegação vem da lista única de categorias (sem rota ou nome repetido).
+//  ──────────────────────────────────────────────────────────────────────
 "use client";
 
 import Link from "next/link";

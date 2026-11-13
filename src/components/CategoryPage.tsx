@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Modelo das vitrines /licores, /kombuchas e /ice.
+//  ⚙️  COMO FUNCIONA: Busca no banco só os produtos ATIVOS da categoria e mostra a grade de cards.
+//  🎓 NA BANCA: RF01: se o dono desliga um produto no CRM, ele some daqui sozinho.
+//  ──────────────────────────────────────────────────────────────────────
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ProductCard } from "@/components/ProductCard";

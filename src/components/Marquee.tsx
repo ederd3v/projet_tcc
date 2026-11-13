@@ -21,7 +21,9 @@ export function Marquee() {
       <div className="flex w-max animate-marquee gap-14">
         {[...ITENS, ...ITENS].map((item, i) => (
           <div key={`${item}-${i}`} className="flex items-center gap-6 whitespace-nowrap">
-            <span className="font-display text-lg text-maruim-cream/30">{item}</span>
+            {/* text-maruim-muted em vez de cream/30: o Lighthouse reprovava o
+                contraste (2,4:1). O muted já é o cinza "de apoio" com contraste ok. */}
+            <span className="font-display text-lg text-maruim-muted">{item}</span>
             <span className="h-1.5 w-1.5 rounded-full bg-maruim-amber" />
           </div>
         ))}

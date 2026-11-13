@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Moldura de TODAS as páginas: fontes, cores do tema, cabeçalho e rodapé.
+//  ⚙️  COMO FUNCIONA: O Next.js envolve cada página com este layout. Aqui também roda um script mínimo que aplica o tema salvo (claro/escuro) antes da tela pintar, para não piscar.
+//  🎓 NA BANCA: Um layout só = visual consistente e nada repetido em cada página.
+//  ──────────────────────────────────────────────────────────────────────
 import type { Metadata } from "next";
 import { Special_Elite, Playfair_Display, DM_Sans } from "next/font/google";
 import "./globals.css";

@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Botão FLUTUANTE do WhatsApp no canto da tela.
+//  ⚙️  COMO FUNCIONA: Aparece depois que a pessoa passa da primeira tela; existe em todas as páginas públicas.
+//  🎓 NA BANCA: Atalho de compra sempre à mão, principalmente no celular.
+//  ──────────────────────────────────────────────────────────────────────
 "use client";
 
 import { useEffect, useState } from "react";

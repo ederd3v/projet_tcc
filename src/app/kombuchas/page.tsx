@@ -1,3 +1,8 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: Página /kombuchas: a vitrine de kombuchas.
+//  ⚙️  COMO FUNCIONA: Só chama o CategoryPage com a categoria 'kombucha'.
+//  🎓 NA BANCA: Mesmo componente das outras linhas (sem código repetido).
+//  ──────────────────────────────────────────────────────────────────────
 import { CategoryPage } from "@/components/CategoryPage";
 
 export const revalidate = 0;

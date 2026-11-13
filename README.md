@@ -8,7 +8,14 @@ do dono Jaisson. Um projeto só, com duas partes que usam o mesmo banco:
 - **CRM** (com login): o dono acompanha pedidos, clientes, produtos e vendas.
 
 Stack (RFC, seção 6.2): **Next.js + TypeScript + Tailwind**, **PostgreSQL**
-com **Prisma**, login com **NextAuth**. Hospedagem prevista: AWS Amplify + RDS.
+com **Prisma**, login com **NextAuth**, hospedagem **AWS Amplify + RDS**.
+
+**No ar:** https://main.d16jiora0fzatk.amplifyapp.com (painel em `/crm/login`).
+Cada `git push` na `main` publica sozinho em ~5 minutos.
+
+> 📘 **Para estudar o código:** todo arquivo principal começa com um bloco
+> "O QUE É / COMO FUNCIONA / NA BANCA". Comece por `src/app/page.tsx` (home),
+> `src/components/BotaoPedir.tsx` (pedido) e `src/middleware.ts` (login).
 
 > O RFC fala em Next.js 14. O projeto roda **Next.js 15.5 + React 19** desde
 > 06/11/2026, porque a versão 14 parou de receber correções de segurança. A
@@ -23,7 +30,7 @@ src/
   app/                    páginas e rotas da API (cada pasta = uma URL)
     page.tsx              /            home da landing
     licores/ kombuchas/   /licores …   uma página por linha de produto
-    ice/ sobre/ contato/
+    ice/ sobre/           /sobre traz a história e o contato (/contato redireciona)
     crm/login/            /crm/login   tela de login do dono
     api/
       pedido-do-site/     POST: o site registra um pedido no banco
@@ -36,6 +43,8 @@ src/
     categorias.ts         as 3 linhas de produto (licor, kombucha, ice)
     status.ts             etapas do pedido (novo → entregue)
     whatsapp.ts           monta o link do WhatsApp
+    notas.ts              notas de sabor que aparecem ao passar o mouse na foto
+    maisPedido.ts         calcula o selo "★ Mais pedido" a partir dos pedidos do CRM
   middleware.ts           bloqueia /painel e /api/crm sem login
   painel/index.html       o HTML do CRM (servido pela rota app/painel, só com login)
 
@@ -62,6 +71,17 @@ prisma/
         └────────────── PostgreSQL ─────────┘
 ```
 
+### Os dois bancos (e por que existem)
+
+| Banco | Onde | Para quê | Dados |
+|---|---|---|---|
+| **Produção** | Amazon RDS (AWS), usado pelo site no ar | o Jaisson e os clientes de verdade | **reais** |
+| **Teste** | PostgreSQL portátil no computador (`maruim-postgres`, porta 5433) | testar mudanças antes de publicar | **inventados** (botão "Embaralhar dados") |
+
+Os dois têm **a mesma estrutura**: as tabelas saem de `prisma/migrations/`, e o
+deploy roda `prisma migrate deploy` no RDS a cada publicação. Só os dados são
+diferentes, de propósito: assim um teste nunca bagunça pedido de cliente real.
+
 1. O visitante escolhe um produto e clica em **Pedir no WhatsApp**.
 2. Uma janela confirma a quantidade. Ao confirmar, abre o WhatsApp com a
    mensagem pronta e o pedido é gravado no banco, com o preço tirado do
@@ -85,7 +105,9 @@ prisma/
 
 ## Rodando no computador
 
-Precisa de Node.js 22 e de um PostgreSQL rodando.
+Precisa de Node.js 22 e do banco de teste rodando (pasta `maruim-postgres`:
+`npm start`). No VS Code, a área de trabalho "Maruim (TCC)" faz tudo pela
+tarefa **▶ Rodar tudo**.
 
 ```bash
 npm install
@@ -105,7 +127,7 @@ npm run dev
 em `OWNER_PASSWORD_HASH` no `.env`, trocando cada `$` por `\$` (o Next.js lê
 `$` dentro do `.env` como variável).
 
-## Publicando na AWS
+## Como foi publicado na AWS (já feito em 10/11/2026)
 
 1. **Banco:** criar um Amazon RDS PostgreSQL (`db.t4g.micro`, com acesso
    público, SSL e backup). A URL vai com `?sslmode=require`. Depois rodar o
@@ -121,8 +143,9 @@ preencher `COGNITO_CLIENT_ID`, `COGNITO_CLIENT_SECRET` e `COGNITO_ISSUER`.
 
 ## Pendências
 
-- [ ] Publicar na AWS (RDS + Amplify).
-- [ ] Fotos novas das kombuchas (aguardando o material do Jaisson).
+- [x] Publicar na AWS (RDS + Amplify), em 10/11/2026.
+- [x] Fotos padronizadas dos 22 produtos, em 11/11/2026.
+- [ ] Confirmar com o Jaisson as notas de sabor (`src/lib/notas.ts`) e a marca das kombuchas.
 - [ ] @ do Instagram (o link só aparece quando `NEXT_PUBLIC_INSTAGRAM_URL`
       estiver preenchida).
 - [ ] Envio de foto de produto pelo CRM (hoje as fotos ficam em
