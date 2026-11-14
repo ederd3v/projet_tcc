@@ -28,29 +28,45 @@ Cada `git push` na `main` publica sozinho em ~5 minutos.
 ```
 src/
   app/                    páginas e rotas da API (cada pasta = uma URL)
-    page.tsx              /            home da landing
-    licores/ kombuchas/   /licores …   uma página por linha de produto
-    ice/ sobre/           /sobre traz a história e o contato (/contato redireciona)
-    crm/login/            /crm/login   tela de login do dono
+    layout.tsx            moldura raiz (html, fontes, tema)
+    (site)/               SITE PÚBLICO — o "(site)" não aparece na URL
+      layout.tsx          carrega o CSS do site (Tailwind)
+      page.tsx            /            home da landing
+      licores/ kombuchas/ ice/          uma página por linha de produto
+      sobre/              /sobre       história + contato (/contato redireciona)
+      crm/login/          /crm/login   tela de login do dono
+    painel/               /painel      o CRM (só com login)
+      layout.tsx          carrega o CSS do painel
+      page.tsx            põe o HTML do painel na tela e chama iniciarPainel()
     api/
       pedido-do-site/     POST: o site registra um pedido no banco
-      crm/estado/         GET/PUT: o CRM lê e salva os dados
+      crm/estado/         GET/PUT: o CRM lê e salva os dados (valida as regras)
       auth/               login (NextAuth)
-  components/             pedaços da landing (Header, Hero, ProductCard…)
-  lib/                    código compartilhado
+  painel/                 TODA A LÓGICA DO CRM, em TypeScript
+    tipos.ts              formato de Produto, Cliente, Pedido, Estado
+    dados.ts              conversa com a API e guarda o estado em memória
+    nucleo.ts             menu, período, janelas e a Visão geral
+    telas.ts              Pedidos, Clientes, Produtos, Origem e formulários
+    graficos.ts           gráficos em SVG (sem biblioteca)
+    util.ts               formatar dinheiro/data/telefone, escapar HTML
+    estrutura.ts          o esqueleto HTML do painel
+    painel.css            o visual do painel
+  components/             pedaços do site (Header, Hero, ProductCard…)
+  lib/                    código compartilhado (site + painel + API)
     prisma.ts             conexão com o banco
     auth.ts               regra de login
+    regrasPedido.ts       regras do pedido (RF05) usadas no painel E na API
     categorias.ts         as 3 linhas de produto (licor, kombucha, ice)
     status.ts             etapas do pedido (novo → entregue)
     whatsapp.ts           monta o link do WhatsApp
     notas.ts              notas de sabor que aparecem ao passar o mouse na foto
     maisPedido.ts         calcula o selo "★ Mais pedido" a partir dos pedidos do CRM
   middleware.ts           bloqueia /painel e /api/crm sem login
-  painel/index.html       o HTML do CRM (servido pela rota app/painel, só com login)
 
 public/
-  painel/assets/          CSS e JavaScript puro do CRM
+  painel/assets/          fontes e fotos usadas pelo painel
   products/               fotos dos produtos
+  brand/                  logo e selo da Maruim
 
 prisma/
   schema.prisma           as 4 tabelas: Cliente, Produto, Pedido, ItemPedido
@@ -95,11 +111,11 @@ diferentes, de propósito: assim um teste nunca bagunça pedido de cliente real.
 |---|---|---|
 | RF01/RF02 | Catálogo e botão de WhatsApp por produto | `src/app`, `src/components/BotaoPedir.tsx` |
 | RF03 | Login do dono | `src/lib/auth.ts`, `src/middleware.ts` |
-| RF04 | Cadastro de clientes | CRM → Clientes |
-| RF05 | Registro de pedidos | CRM → Pedidos (quadro) |
+| RF04 | Clientes: cadastrar, editar e remover | CRM → Clientes (`src/painel/telas.ts`: formCliente, detalheCliente → Excluir) |
+| RF05 | Pedido com cliente + itens | CRM → Pedidos; regras em `src/lib/regrasPedido.ts`, conferidas no painel e na API |
 | RF06 | Histórico de pedidos por cliente | CRM → Clientes → abrir cliente |
 | RF07 | Cadastro de produtos (ligar/desligar) | CRM → Produtos |
-| RF08 | Responsivo | Tailwind na landing, CSS com media queries no CRM |
+| RF08 | Responsivo | Tailwind na landing, CSS com media queries no CRM (`src/painel/painel.css`) |
 
 ---
 

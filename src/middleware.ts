@@ -8,7 +8,7 @@ import { withAuth } from "next-auth/middleware";
 // RNF03 / RF03: área interna sem sessão válida → redireciona pro login.
 //
 // Cobre três coisas:
-//  • /painel      — o painel de gestão (HTML em src/painel, via rota)
+//  • /painel      — o painel de gestão (página src/app/painel, lógica em src/painel)
 //  • /crm         — a tela de login e o que restar da área antiga
 //  • /api/crm/*   — a API que o painel consome; sem isto, proteger a tela
 //                   seria teatro, porque os dados sairiam pela API mesmo.

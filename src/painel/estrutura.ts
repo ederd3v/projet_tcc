@@ -1,13 +1,13 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Maruim · Gestão</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%23e0a040'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' font-family='Georgia' font-weight='700' fill='%23231a10'%3EM%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="/painel/assets/css/styles.css">
-</head>
-<body>
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: O ESQUELETO (HTML) do painel: menu lateral, cabeçalho, as 5 telas
+//      vazias, a janela (modal), a gaveta (drawer) e o aviso (toast).
+//  ⚙️  COMO FUNCIONA: A página /painel coloca este HTML na tela; depois o
+//      núcleo (nucleo.ts) preenche cada parte com os dados do banco. Cada
+//      elemento tem um id (ex.: "k-pedidos") que o código usa para achá-lo.
+//  🎓 NA BANCA: Estrutura separada da lógica — mudar o visual não mexe nas regras.
+//  ──────────────────────────────────────────────────────────────────────
+
+export const ESTRUTURA_PAINEL = `
 <div class="app">
   <nav class="rail" aria-label="Menu principal">
     <div class="logo" aria-hidden="true">M</div>
@@ -145,22 +145,11 @@
       </div>
     </section>
 
-    <p class="demo">Protótipo com dados de exemplo salvos neste navegador · preços e sabores reais do catálogo</p>
+    <p class="demo">Dados salvos no banco PostgreSQL (Amazon RDS) · "Embaralhar dados" gera um movimento fictício só para apresentar</p>
   </main>
 </div>
 
 <div class="overlay" id="modal" role="dialog" aria-modal="true"><div class="modal" id="modal-body"></div></div>
 <div class="overlay drawer" id="drawer" role="dialog" aria-modal="true"><div class="modal" id="drawer-body"></div></div>
 <div class="toast" id="toast" role="status"></div>
-
-<script>
-  // Endereço da API do webapp. Em produção, quando o painel for servido pelo
-  // mesmo domínio, basta trocar por "" e as chamadas viram relativas.
-  window.MARUIM_API = ""; // mesma origem: o painel é servido pelo próprio webapp
-</script>
-<script src="/painel/assets/js/data.js"></script>
-<script src="/painel/assets/js/charts.js"></script>
-<script src="/painel/assets/js/app.js"></script>
-<script src="/painel/assets/js/telas.js"></script>
-</body>
-</html>
+`;

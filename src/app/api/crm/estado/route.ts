@@ -6,6 +6,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ehStatusValido, STATUS_INICIAL } from "@/lib/status";
+import { totalDoPedido, validarPedido } from "@/lib/regrasPedido";
 
 export const dynamic = "force-dynamic";
 
@@ -92,6 +93,16 @@ type EstadoRecebido = {
 export async function PUT(req: Request) {
   const corpo = (await req.json()) as EstadoRecebido;
 
+  // RF05 no servidor: as mesmas regras do painel (src/lib/regrasPedido.ts).
+  // Se alguém mandar um pedido inválido direto para a API, nada é gravado.
+  const idsClientes = new Set((corpo.clientes ?? []).map((c) => c.id));
+  for (const o of corpo.pedidos ?? []) {
+    const problema = validarPedido(o, idsClientes);
+    if (problema) {
+      return NextResponse.json({ ok: false, erro: `Pedido ${o.id}: ${problema}` }, { status: 400 });
+    }
+  }
+
   try {
     await prisma.$transaction(
       async (tx) => {
@@ -145,12 +156,9 @@ export async function PUT(req: Request) {
           });
         }
 
-        const pedidos = corpo.pedidos ?? [];
-        // Pedido apontando para um cliente que não existe quebraria a chave
-        // estrangeira. Pedido sem cliente (os do site) é válido e fica
-        // (issue #3: antes eles sumiam a cada salvamento do painel).
-        const idsClientesValidos = new Set((corpo.clientes ?? []).map((c) => c.id));
-        const validos = pedidos.filter((o) => !o.clienteId || idsClientesValidos.has(o.clienteId));
+        // Todos já passaram por validarPedido acima: cliente existe (ou é
+        // pedido do site ainda "novo"/"cancelado") e há pelo menos um item.
+        const validos = corpo.pedidos ?? [];
 
         if (validos.length) {
           await tx.pedido.createMany({
@@ -162,7 +170,7 @@ export async function PUT(req: Request) {
               origem: o.origem ?? "WhatsApp direto",
               pagamento: o.pagamento ?? null,
               observacao: o.obs || null,
-              total: o.itens.reduce((s, it) => s + it.q * it.preco, 0),
+              total: totalDoPedido(o.itens),
             })),
           });
 

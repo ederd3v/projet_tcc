@@ -7,13 +7,12 @@
 
 import { Suspense, useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 // RF03: login do dono. Em produção usa o Cognito (botão dedicado); o
 // formulário de e-mail/senha abaixo é o fallback local pra testar o CRM
 // antes do User Pool existir (ver src/lib/auth.ts).
 function LoginForm() {
-  const router = useRouter();
   const params = useSearchParams();
   // Só aceita caminho interno ("/painel"). Um link com callbackUrl de outro
   // site levaria o dono para fora depois do login (open redirect).
@@ -40,7 +39,9 @@ function LoginForm() {
       setErro("E-mail ou senha inválidos.");
       return;
     }
-    router.push(callbackUrl);
+    // Carregamento completo (e não navegação interna do React): o painel tem
+    // CSS próprio, e assim o CSS do site não fica "pendurado" na tela do CRM.
+    window.location.assign(callbackUrl);
   }
 
   return (

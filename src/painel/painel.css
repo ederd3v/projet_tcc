@@ -1,6 +1,13 @@
-@font-face{font-family:"Playfair Display";font-weight:400 900;font-display:swap;src:url(../fonts/playfair.woff2) format("woff2")}
-@font-face{font-family:"Special Elite";font-weight:400;font-display:swap;src:url(../fonts/special-elite.woff2) format("woff2")}
-@font-face{font-family:"DM Sans";font-weight:100 1000;font-display:swap;src:url(../fonts/dmsans.woff2) format("woff2")}
+/*  ──────────────────────────────────────────────────────────────────────
+    📘 O QUE É: O VISUAL do painel (cores, cards, quadro, gráficos, celular).
+    ⚙️  COMO FUNCIONA: CSS puro, carregado só na página /painel (pelo
+        src/app/painel/layout.tsx) — não interfere no site público.
+    🎓 NA BANCA: Variáveis de cor (--amber, --cream…) e media queries garantem
+        o RF08 (funciona no celular) sem framework de CSS.
+    ────────────────────────────────────────────────────────────────────── */
+@font-face{font-family:"Playfair Display";font-weight:400 900;font-display:swap;src:url(/painel/assets/fonts/playfair.woff2) format("woff2")}
+@font-face{font-family:"Special Elite";font-weight:400;font-display:swap;src:url(/painel/assets/fonts/special-elite.woff2) format("woff2")}
+@font-face{font-family:"DM Sans";font-weight:100 1000;font-display:swap;src:url(/painel/assets/fonts/dmsans.woff2) format("woff2")}
 
 /* Mesmos tokens da landing (assets/styles-*.css do site) */
 :root{
