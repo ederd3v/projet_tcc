@@ -17,3 +17,6 @@ next-env.d.ts
 .env.bak*
 .env.*.bak
 *.env.bak*
+
+# relatório de cobertura dos testes (npm run test:cobertura)
+/coverage

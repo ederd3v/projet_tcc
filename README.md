@@ -119,6 +119,33 @@ diferentes, de propósito: assim um teste nunca bagunça pedido de cliente real.
 
 ---
 
+## Testes automáticos
+
+```bash
+npm test                 # roda todos os testes (Vitest)
+npm run test:cobertura   # mostra quanto do código os testes exercitam (abre coverage/index.html)
+```
+
+São 149 testes em 12 arquivos, cada um ao lado do código que testa (`*.test.ts`):
+
+| O que é testado | Arquivo |
+|---|---|
+| Regras do pedido (RF05): cliente, itens, pedido do site | `src/lib/regrasPedido.test.ts` |
+| Login do dono (RF03): senha certa/errada, hash bcrypt, Cognito | `src/lib/auth.test.ts` |
+| Porteiro: o que exige login (RNF03) | `src/middleware.test.ts` |
+| Link do WhatsApp (RF02): número e mensagem | `src/lib/whatsapp.test.ts` |
+| API do pedido do site: preço do banco, quantidade, produto desligado | `src/app/api/pedido-do-site/route.test.ts` |
+| API do CRM: leitura e regras conferidas no servidor | `src/app/api/crm/estado/route.test.ts` |
+| Dados do painel: pedidos, clientes (RF04), estoque, salvamento | `src/painel/dados.test.ts` |
+| Gráficos do painel | `src/painel/graficos.test.ts` |
+| Utilitários: XSS, telefone, datas | `src/painel/util.test.ts` |
+| Catálogo: as 22 fotos e notas existem | `prisma/catalogo.test.ts` |
+| Etapas do pedido, "mais pedido" | `src/lib/status.test.ts`, `src/lib/maisPedido.test.ts` |
+
+O banco é **simulado** nos testes (não precisa de PostgreSQL rodando) e o
+**deploy roda os testes antes do build** (`amplify.yml`): se algum falhar, a
+versão nova não vai para o ar.
+
 ## Rodando no computador
 
 Precisa de Node.js 22 e do banco de teste rodando (pasta `maruim-postgres`:

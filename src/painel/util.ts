@@ -63,6 +63,18 @@ export function tel(t: string | null | undefined): string {
   return n;
 }
 
+/**
+ * Telefone como é GUARDADO: só DDD + número, sem o 55 do país.
+ * Os links do WhatsApp acrescentam "55" na frente; se o dono digitasse
+ * "+55 47 99999-0000", o link virava wa.me/555547… e abria número errado
+ * (achado pelos testes em util.test.ts).
+ */
+export function normalizarTelefone(t: string): string {
+  const n = String(t ?? "").replace(/\D/g, "");
+  // 12 ou 13 dígitos começando com 55 = número com o código do país.
+  return (n.length === 12 || n.length === 13) && n.startsWith("55") ? n.slice(2) : n;
+}
+
 /** Variação percentual de a em relação a b (para os "+12%" dos cards). */
 export function pct(a: number, b: number): number {
   return b ? Math.round((a / b - 1) * 100) : a ? 100 : 0;

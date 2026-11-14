@@ -11,7 +11,7 @@ import * as D from "./dados";
 import * as G from "./graficos";
 import { abrir, fechar, intervalo, ir, linhaPedido, nomeDoCliente, pedidosEntre, render as renderTudo, serieDiaria, setPeriodo, statusPill, toast } from "./nucleo";
 import type { Categoria, ItemPedido, StatusPedido } from "./tipos";
-import { $, $$, brl, curto, dd, esc, ini, int, NOME_CATEGORIA_CURTO, tel } from "./util";
+import { $, $$, brl, curto, dd, esc, ini, int, NOME_CATEGORIA_CURTO, normalizarTelefone, tel } from "./util";
 import { podeFicarSemCliente, validarPedido } from "@/lib/regrasPedido";
 
 let modoPedidos: "kanban" | "lista" = "kanban";
@@ -171,7 +171,7 @@ export function formPedido(id?: string): void {
     if (!cid) { err.textContent = "Escolha o cliente do pedido."; return; }
     if (!validos.length) { err.textContent = "Adicione pelo menos um sabor."; return; }
     if (cid === "__novo") {
-      const nn = $<HTMLInputElement>("#f-nn", corpo).value.trim(), nt = $<HTMLInputElement>("#f-nt", corpo).value.replace(/\D/g, "");
+      const nn = $<HTMLInputElement>("#f-nn", corpo).value.trim(), nt = normalizarTelefone($<HTMLInputElement>("#f-nt", corpo).value);
       if (nn.length < 3) { err.textContent = "Digite o nome do cliente novo."; return; }
       if (nt.length < 10) { err.textContent = "Digite o WhatsApp com DDD."; return; }
       cid = D.salvarCliente({ nome: nn, tel: nt, bairro: "", notas: "" }).id;
@@ -263,7 +263,7 @@ export function formCliente(id?: string): void {
     `<div class='field'><label for='c-notas'>Anotações</label><textarea class='inp' id='c-notas' rows='3' placeholder='Prefere entrega à tarde'>${esc(c.notas)}</textarea></div>` +
     "<p class='err' id='c-err'></p><div class='foot'><button class='btn' data-action='fechar'>Cancelar</button><button class='btn primary' id='c-salvar'>Salvar cliente</button></div>");
   $("#c-salvar", corpo).addEventListener("click", () => {
-    const nome = $<HTMLInputElement>("#c-nome", corpo).value.trim(), fone = $<HTMLInputElement>("#c-tel", corpo).value.replace(/\D/g, "");
+    const nome = $<HTMLInputElement>("#c-nome", corpo).value.trim(), fone = normalizarTelefone($<HTMLInputElement>("#c-tel", corpo).value);
     if (nome.length < 3) { $("#c-err", corpo).textContent = "Digite o nome do cliente."; return; }
     if (fone.length < 10) { $("#c-err", corpo).textContent = "Digite o WhatsApp com DDD."; return; }
     D.salvarCliente({ id, nome, tel: fone, bairro: $<HTMLInputElement>("#c-bairro", corpo).value.trim(), notas: $<HTMLTextAreaElement>("#c-notas", corpo).value.trim() });
