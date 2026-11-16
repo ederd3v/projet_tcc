@@ -24,6 +24,12 @@ describe("catálogo", () => {
     expect(PRECO_KOMBUCHA).toBeGreaterThan(0);
     expect(PRECO_ICE).toBeGreaterThan(0);
   });
+  it("tabela de 16/11: licores e kombuchas terminam em ,90; Ice fica em R$ 7,50", () => {
+    const centavos = (v: number) => Math.round(v * 100) % 100;
+    for (const l of licores) expect(centavos(l.preco ?? 0), l.nome).toBe(90);
+    expect(centavos(PRECO_KOMBUCHA)).toBe(90);
+    expect(PRECO_ICE).toBe(7.5);
+  });
   it.each(todos.map((p) => [p.nome, p.foto]))("%s tem a foto .png (banco) e a .jpg leve (vitrine)", (_nome, foto) => {
     expect(existsSync(path.join(pasta, `${foto}.png`)), `${foto}.png`).toBe(true);
     expect(existsSync(path.join(pasta, `${foto}.jpg`)), `${foto}.jpg`).toBe(true);

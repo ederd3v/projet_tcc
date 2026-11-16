@@ -10,17 +10,17 @@
 export type ItemCatalogo = { nome: string; foto: string; preco?: number };
 
 export const licores: ItemCatalogo[] = [
-  { nome: "Licor de Anis Estrelado", preco: 30, foto: "licor-anis-estrelado" },
-  { nome: "Licor de Banana", preco: 30, foto: "licor-banana" },
-  { nome: "Licor de Canela", preco: 30, foto: "licor-canela" },
-  { nome: "Licor de Maracujá", preco: 30, foto: "licor-maracuja" },
-  { nome: "Licor de Abacaxi", preco: 30, foto: "licor-abacaxi" },
-  { nome: "Licor de Butiá", preco: 35, foto: "licor-butia" },
-  { nome: "Licor de Jabuticaba", preco: 35, foto: "licor-jabuticaba" },
-  { nome: "Licor de Café", preco: 40, foto: "licor-cafe" },
-  { nome: "Licor de Figo", preco: 40, foto: "licor-figo" },
-  { nome: "Licor de Morango", preco: 40, foto: "licor-morango" },
-  { nome: "Licor de Ameixa", preco: 50, foto: "licor-ameixa" },
+  { nome: "Licor de Anis Estrelado", preco: 29.9, foto: "licor-anis-estrelado" },
+  { nome: "Licor de Banana", preco: 29.9, foto: "licor-banana" },
+  { nome: "Licor de Canela", preco: 29.9, foto: "licor-canela" },
+  { nome: "Licor de Maracujá", preco: 29.9, foto: "licor-maracuja" },
+  { nome: "Licor de Abacaxi", preco: 29.9, foto: "licor-abacaxi" },
+  { nome: "Licor de Butiá", preco: 34.9, foto: "licor-butia" },
+  { nome: "Licor de Jabuticaba", preco: 34.9, foto: "licor-jabuticaba" },
+  { nome: "Licor de Café", preco: 39.9, foto: "licor-cafe" },
+  { nome: "Licor de Figo", preco: 39.9, foto: "licor-figo" },
+  { nome: "Licor de Morango", preco: 39.9, foto: "licor-morango" },
+  { nome: "Licor de Ameixa", preco: 49.9, foto: "licor-ameixa" },
 ];
 
 export const kombuchas: ItemCatalogo[] = [
@@ -40,6 +40,7 @@ export const ices: ItemCatalogo[] = [
   { nome: "Ice Maracujá", foto: "ice-maracuja" },
 ];
 
-/** Preços fixos por linha (kombucha e ice têm preço único). */
-export const PRECO_KOMBUCHA = 11;
+/** Preços fixos por linha (kombucha e ice têm preço único).
+ *  Tabela de 16/11/2026: licores e kombuchas com final ,90; Ice mantido em R$ 7,50. */
+export const PRECO_KOMBUCHA = 10.9;
 export const PRECO_ICE = 7.5;

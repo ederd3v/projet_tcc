@@ -15,16 +15,16 @@ const PASTA_IMG = "/painel/assets/img/";
 /* Catálogo real (usado só se o banco ainda estiver vazio). Último número =
    "peso": a chance de o sabor aparecer nos pedidos de exemplo. */
 const CATALOGO: [string, string, Categoria, number, string, number][] = [
-  ["jabuticaba", "Licor de Jabuticaba", "licor", 35, "render-jabuticaba", 9], ["butia", "Licor de Butiá", "licor", 35, "render-butia", 7],
-  ["cafe", "Licor de Café", "licor", 40, "render-cafe", 8], ["morango", "Licor de Morango", "licor", 40, "render-morango", 6],
-  ["figo", "Licor de Figo", "licor", 40, "render-figo", 3], ["ameixa", "Licor de Ameixa", "licor", 50, "render-ameixa", 3],
-  ["anis", "Licor de Anis Estrelado", "licor", 30, "render-anis", 2], ["banana", "Licor de Banana", "licor", 30, "render-banana", 4],
-  ["canela", "Licor de Canela", "licor", 30, "render-canela", 4], ["maracuja", "Licor de Maracujá", "licor", 30, "render-maracuja", 5],
-  ["abacaxi", "Licor de Abacaxi", "licor", 30, "render-abacaxi", 3],
-  ["k-abacaxi", "Kombucha Abacaxi e Hortelã", "kombucha", 11, "kombucha-abacaxi", 5], ["k-gengibre", "Kombucha Gengibre, Limão e Mel", "kombucha", 11, "kombucha-gengibre", 6],
-  ["k-maracuja", "Kombucha Maracujá e Cardamomo", "kombucha", 11, "kombucha-maracuja", 3], ["k-morango", "Kombucha Morango e Hibisco", "kombucha", 11, "kombucha-morango", 5],
-  ["k-pink", "Kombucha Pink Lemonade", "kombucha", 11, "kombucha-pinklemonade", 4], ["k-uva", "Kombucha Uva", "kombucha", 11, "kombucha-uva", 3],
-  ["k-uvabranca", "Kombucha Uva Branca", "kombucha", 11, "kombucha-uvabranca", 2],
+  ["jabuticaba", "Licor de Jabuticaba", "licor", 34.9, "render-jabuticaba", 9], ["butia", "Licor de Butiá", "licor", 34.9, "render-butia", 7],
+  ["cafe", "Licor de Café", "licor", 39.9, "render-cafe", 8], ["morango", "Licor de Morango", "licor", 39.9, "render-morango", 6],
+  ["figo", "Licor de Figo", "licor", 39.9, "render-figo", 3], ["ameixa", "Licor de Ameixa", "licor", 49.9, "render-ameixa", 3],
+  ["anis", "Licor de Anis Estrelado", "licor", 29.9, "render-anis", 2], ["banana", "Licor de Banana", "licor", 29.9, "render-banana", 4],
+  ["canela", "Licor de Canela", "licor", 29.9, "render-canela", 4], ["maracuja", "Licor de Maracujá", "licor", 29.9, "render-maracuja", 5],
+  ["abacaxi", "Licor de Abacaxi", "licor", 29.9, "render-abacaxi", 3],
+  ["k-abacaxi", "Kombucha Abacaxi e Hortelã", "kombucha", 10.9, "kombucha-abacaxi", 5], ["k-gengibre", "Kombucha Gengibre, Limão e Mel", "kombucha", 10.9, "kombucha-gengibre", 6],
+  ["k-maracuja", "Kombucha Maracujá e Cardamomo", "kombucha", 10.9, "kombucha-maracuja", 3], ["k-morango", "Kombucha Morango e Hibisco", "kombucha", 10.9, "kombucha-morango", 5],
+  ["k-pink", "Kombucha Pink Lemonade", "kombucha", 10.9, "kombucha-pinklemonade", 4], ["k-uva", "Kombucha Uva", "kombucha", 10.9, "kombucha-uva", 3],
+  ["k-uvabranca", "Kombucha Uva Branca", "kombucha", 10.9, "kombucha-uvabranca", 2],
   ["i-limao", "Ice Limão", "ice", 7.5, "ice-limao", 6], ["i-abacaxi", "Ice Abacaxi", "ice", 7.5, "ice-abacaxi", 4],
   ["i-melancia", "Ice Melancia", "ice", 7.5, "ice-melancia", 5], ["i-maracuja", "Ice Maracujá", "ice", 7.5, "ice-maracuja", 3],
 ];
