@@ -20,7 +20,7 @@ RFC pediu, onde está no código, como provar que funciona e o que mudou (e por 
    4. Associar o cliente → confirmar → abrir a ficha do cliente → **histórico** (RF06).
    5. Desligar um produto em **Produtos** → recarregar o site → ele sumiu (RF01/RF07).
 4. **Arquitetura** (seção 3 deste guia) e **onde cada requisito está** (seção 4).
-5. **Qualidade:** 150 testes automáticos rodando no deploy, TypeScript estrito, Lighthouse.
+5. **Qualidade:** 153 testes automáticos rodando no deploy (registro em `RELATORIO-DE-TESTES.md`), TypeScript estrito, Lighthouse.
 6. **Divergências do RFC** e a justificativa de cada uma (seção 6) — mostrar, não esconder.
 
 ---
@@ -136,6 +136,11 @@ Legenda: ✅ atende · ⚠️ atende com diferença (ver seção 6) · ❌ não 
 
 Prova no banco da AWS: rode `prisma/scripts/validar-banco.sql` (VS Code → SQLTools).
 
+**Banco de produção auditado em 16/11/2026** (`validar-banco.sql` rodado no RDS pelo CloudShell):
+4 tabelas + as 4 migrações aplicadas · 22 produtos · **0 problemas** nas 5 checagens de integridade.
+A primeira rodada achou **1 pedido do site "confirmado" sem cliente** (criado antes da regra do RF05),
+que travaria o painel — foi corrigido para "novo" antes de qualquer outra mudança, com snapshot do banco feito antes.
+
 **O banco no console da AWS (conferido em 16/11/2026):** `maruim-db` · **Disponível** ·
 PostgreSQL **18.3** · db.t4g.micro (2 vCPU, 1 GB) · 20 GiB gp2 · us-east-1b · Multi-AZ: não ·
 banco `maruim`, usuário `maruim` · security group `maruim-rds` (porta 5432) · backup automático
@@ -163,14 +168,18 @@ habilitado · upgrade automático de versões menores habilitado · criado em 10
 | Fluxo WhatsApp | mensagem correta em todos | 22/22 produtos | ✅ |
 | CRM operacional | dono usa sem ajuda | login em produção ok; falta o Jaisson usar sozinho | ⏳ |
 | Performance mobile | < 2 s / Lighthouse > 80 | Lighthouse **87**, acessibilidade **100**, SEO 100 | ✅ / ⚠️ LCP |
-| Código tipado | 100% TS sem erros | 100% TS, 0 erros, 150 testes | ✅ |
+| Código tipado | 100% TS sem erros | 100% TS, 0 erros, 153 testes | ✅ |
 
 ---
 
 ## 5. Qualidade e testes
 
-- **150 testes automáticos** (Vitest) em 12 arquivos `*.test.ts`, ao lado do código.
+- **153 testes automáticos** (Vitest) em 13 arquivos `*.test.ts`, ao lado do código — todos passando.
   Rodar: `npm test` · VS Code → Terminal → Executar Tarefa → **🧪 Rodar testes** · aba **Testes** (ícone de frasco).
+- **Registro para a auditoria:** `RELATORIO-DE-TESTES.md` lista cada teste, o requisito do RFC que ele
+  cobre e a cobertura por arquivo (gerado por `npm run test:relatorio`, com data e hora).
+- **Cobertura:** regras de negócio, login, WhatsApp e APIs entre 92% e 100%; a interface do
+  painel (`nucleo.ts`, `telas.ts`) é coberta pelo teste de ponta a ponta no navegador.
 - O **deploy roda os testes antes do build**: se um falhar, a versão nova não vai para o ar.
 - **Bugs que os testes acharam e foram corrigidos:** API do CRM quebrando com dado
   malformado (500 → 400); telefone com +55 gerando link errado; login recusando
@@ -199,6 +208,10 @@ habilitado · upgrade automático de versões menores habilitado · criado em 10
 A API do site recebe só *qual produto* e *quantos*; o preço é lido do banco
 (`src/app/api/pedido-do-site/route.ts`) — há teste para isso.
 
+**"Como foi feita a troca de preços para o final ,90?"**
+Com o script versionado `prisma/scripts/2026-11-16-precos-final-90.sql`, em transação, depois de um
+snapshot do banco; testado antes no banco local. Um teste (`prisma/catalogo.test.ts`) trava a regra.
+
 **"O que acontece se mudar o preço de um produto?"**
 Só o catálogo muda. Cada item de pedido guarda o preço da venda (`ItemPedido.precoUnit`),
 então o histórico e os relatórios não se alteram.
@@ -216,5 +229,5 @@ O RDS tem backup automático; a estrutura é recriada do zero pelas migrations
 (`prisma migrate deploy`) e o catálogo pelo `prisma/catalogo.ts`.
 
 **"Como sabem que está funcionando?"**
-150 testes rodando a cada deploy, Lighthouse medido no ar e o script
+153 testes rodando a cada deploy, Lighthouse medido no ar e o script
 `prisma/scripts/validar-banco.sql` conferindo a integridade do banco na AWS.

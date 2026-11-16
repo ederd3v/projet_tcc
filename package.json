@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:cobertura": "vitest run --coverage",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "test:relatorio": "vitest run --reporter=json --outputFile=relatorios/testes.json && vitest run --coverage --coverage.reporter=json-summary --coverage.reporter=text && node scripts/relatorio-testes.mjs"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

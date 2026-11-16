@@ -126,7 +126,9 @@ npm test                 # roda todos os testes (Vitest)
 npm run test:cobertura   # mostra quanto do código os testes exercitam (abre coverage/index.html)
 ```
 
-São 149 testes em 12 arquivos, cada um ao lado do código que testa (`*.test.ts`):
+São 153 testes em 13 arquivos, cada um ao lado do código que testa (`*.test.ts`).
+O registro completo (cada teste + requisito + cobertura) está em `RELATORIO-DE-TESTES.md`
+(`npm run test:relatorio` gera de novo):
 
 | O que é testado | Arquivo |
 |---|---|
@@ -140,7 +142,7 @@ São 149 testes em 12 arquivos, cada um ao lado do código que testa (`*.test.ts
 | Gráficos do painel | `src/painel/graficos.test.ts` |
 | Utilitários: XSS, telefone, datas | `src/painel/util.test.ts` |
 | Catálogo: as 22 fotos e notas existem | `prisma/catalogo.test.ts` |
-| Etapas do pedido, "mais pedido" | `src/lib/status.test.ts`, `src/lib/maisPedido.test.ts` |
+| Etapas do pedido, "mais pedido", linhas de produto | `src/lib/status.test.ts`, `src/lib/maisPedido.test.ts`, `src/lib/categorias.test.ts` |
 
 O banco é **simulado** nos testes (não precisa de PostgreSQL rodando) e o
 **deploy roda os testes antes do build** (`amplify.yml`): se algum falhar, a
