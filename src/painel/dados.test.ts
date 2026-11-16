@@ -46,7 +46,7 @@ describe("carregar", () => {
   it("traz o estado do banco e corrige caminho antigo de foto", () => {
     expect(D.estado.clientes).toHaveLength(2);
     expect(D.produto("p1")?.img).toBe("/products/licor-figo.png"); // absoluto: mantém
-    expect(D.produto("p2")?.img).toBe("/painel/assets/img/licor-antigo.jpg"); // relativo antigo: reancora
+    expect(D.produto("p2")?.img).toBe("/products/licor-antigo.jpg"); // nome solto: vai para a pasta de fotos do site
   });
 });
 

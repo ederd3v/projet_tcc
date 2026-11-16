@@ -10,8 +10,8 @@ public/
 ├── brand/      logo e selo da Maruim (usados como máscara: mudam de cor com o tema)
 ├── sobre/      fotos reais da página Sobre
 └── painel/assets/
-    ├── fonts/  fontes do painel
-    └── img/    fotos antigas do painel (usadas só se o banco estiver vazio)
+    └── fonts/  fontes do painel
+
 ```
 
 **Por que .png e .jpg do mesmo produto?** O banco guarda o `.png`; a vitrine

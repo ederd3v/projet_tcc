@@ -10,21 +10,21 @@ import type { Categoria, Cliente, Estado, ItemPedido, Pedido, Produto, StatusPed
 import { STATUS_PEDIDO } from "@/lib/status";
 
 const API = "/api/crm/estado"; // mesma origem: o painel é servido pelo próprio site
-const PASTA_IMG = "/painel/assets/img/";
+const PASTA_FOTOS = "/products/"; // as mesmas fotos do site (fonte única)
 
 /* Catálogo real (usado só se o banco ainda estiver vazio). Último número =
    "peso": a chance de o sabor aparecer nos pedidos de exemplo. */
 const CATALOGO: [string, string, Categoria, number, string, number][] = [
-  ["jabuticaba", "Licor de Jabuticaba", "licor", 34.9, "render-jabuticaba", 9], ["butia", "Licor de Butiá", "licor", 34.9, "render-butia", 7],
-  ["cafe", "Licor de Café", "licor", 39.9, "render-cafe", 8], ["morango", "Licor de Morango", "licor", 39.9, "render-morango", 6],
-  ["figo", "Licor de Figo", "licor", 39.9, "render-figo", 3], ["ameixa", "Licor de Ameixa", "licor", 49.9, "render-ameixa", 3],
-  ["anis", "Licor de Anis Estrelado", "licor", 29.9, "render-anis", 2], ["banana", "Licor de Banana", "licor", 29.9, "render-banana", 4],
-  ["canela", "Licor de Canela", "licor", 29.9, "render-canela", 4], ["maracuja", "Licor de Maracujá", "licor", 29.9, "render-maracuja", 5],
-  ["abacaxi", "Licor de Abacaxi", "licor", 29.9, "render-abacaxi", 3],
-  ["k-abacaxi", "Kombucha Abacaxi e Hortelã", "kombucha", 10.9, "kombucha-abacaxi", 5], ["k-gengibre", "Kombucha Gengibre, Limão e Mel", "kombucha", 10.9, "kombucha-gengibre", 6],
-  ["k-maracuja", "Kombucha Maracujá e Cardamomo", "kombucha", 10.9, "kombucha-maracuja", 3], ["k-morango", "Kombucha Morango e Hibisco", "kombucha", 10.9, "kombucha-morango", 5],
-  ["k-pink", "Kombucha Pink Lemonade", "kombucha", 10.9, "kombucha-pinklemonade", 4], ["k-uva", "Kombucha Uva", "kombucha", 10.9, "kombucha-uva", 3],
-  ["k-uvabranca", "Kombucha Uva Branca", "kombucha", 10.9, "kombucha-uvabranca", 2],
+  ["jabuticaba", "Licor de Jabuticaba", "licor", 34.9, "licor-jabuticaba", 9], ["butia", "Licor de Butiá", "licor", 34.9, "licor-butia", 7],
+  ["cafe", "Licor de Café", "licor", 39.9, "licor-cafe", 8], ["morango", "Licor de Morango", "licor", 39.9, "licor-morango", 6],
+  ["figo", "Licor de Figo", "licor", 39.9, "licor-figo", 3], ["ameixa", "Licor de Ameixa", "licor", 49.9, "licor-ameixa", 3],
+  ["anis", "Licor de Anis Estrelado", "licor", 29.9, "licor-anis-estrelado", 2], ["banana", "Licor de Banana", "licor", 29.9, "licor-banana", 4],
+  ["canela", "Licor de Canela", "licor", 29.9, "licor-canela", 4], ["maracuja", "Licor de Maracujá", "licor", 29.9, "licor-maracuja", 5],
+  ["abacaxi", "Licor de Abacaxi", "licor", 29.9, "licor-abacaxi", 3],
+  ["k-abacaxi", "Kombucha Abacaxi e Hortelã", "kombucha", 10.9, "kombucha-abacaxi-hortela", 5], ["k-gengibre", "Kombucha Gengibre, Limão e Mel", "kombucha", 10.9, "kombucha-gengibre-limao-mel", 6],
+  ["k-maracuja", "Kombucha Maracujá e Cardamomo", "kombucha", 10.9, "kombucha-maracuja-cardamomo", 3], ["k-morango", "Kombucha Morango e Hibisco", "kombucha", 10.9, "kombucha-morango-hibisco", 5],
+  ["k-pink", "Kombucha Pink Lemonade", "kombucha", 10.9, "kombucha-pink-lemonade", 4], ["k-uva", "Kombucha Uva", "kombucha", 10.9, "kombucha-uva", 3],
+  ["k-uvabranca", "Kombucha Uva Branca", "kombucha", 10.9, "kombucha-uva-branca", 2],
   ["i-limao", "Ice Limão", "ice", 7.5, "ice-limao", 6], ["i-abacaxi", "Ice Abacaxi", "ice", 7.5, "ice-abacaxi", 4],
   ["i-melancia", "Ice Melancia", "ice", 7.5, "ice-melancia", 5], ["i-maracuja", "Ice Maracujá", "ice", 7.5, "ice-maracuja", 3],
 ];
@@ -72,7 +72,7 @@ function gerarExemplo(sementeInicial?: number): Estado {
      ainda não houver nada carregado. */
   const base: Produto[] = estado.produtos.length
     ? estado.produtos
-    : CATALOGO.map(([id, nome, cat, preco, img]) => ({ id, nome, cat, preco, img: PASTA_IMG + img + ".jpg", ativo: true, estoque: 0 }));
+    : CATALOGO.map(([id, nome, cat, preco, img]) => ({ id, nome, cat, preco, img: PASTA_FOTOS + img + ".png", ativo: true, estoque: 0 }));
 
   const pesos: Record<string, number> = {};
   CATALOGO.forEach((p) => { pesos[p[1]] = p[5]; });
@@ -128,11 +128,11 @@ function gerarExemplo(sementeInicial?: number): Estado {
 }
 
 /* O caminho da foto é reancorado na carga: caminho absoluto ("/products/...")
-   vem do banco e é usado como está; caminho relativo é dado antigo, de quando
-   as fotos ficavam numa pasta do painel. */
+   vem do banco e é usado como está; um nome solto de arquivo vira
+   "/products/<nome>" — a mesma pasta de fotos do site. */
 function normalizarImagens(dados: Estado): Estado {
   dados.produtos.forEach((p) => {
-    if (p.img && p.img.charAt(0) !== "/" && p.img.indexOf("http") !== 0) p.img = PASTA_IMG + p.img.split("/").pop();
+    if (p.img && p.img.charAt(0) !== "/" && p.img.indexOf("http") !== 0) p.img = PASTA_FOTOS + p.img.split("/").pop();
   });
   return dados;
 }
