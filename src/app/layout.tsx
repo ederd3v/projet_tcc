@@ -1,11 +1,14 @@
 //  ──────────────────────────────────────────────────────────────────────
-//  📘 O QUE É: Moldura de TODAS as páginas: fontes, cores do tema, cabeçalho e rodapé.
-//  ⚙️  COMO FUNCIONA: O Next.js envolve cada página com este layout. Aqui também roda um script mínimo que aplica o tema salvo (claro/escuro) antes da tela pintar, para não piscar.
-//  🎓 NA BANCA: Um layout só = visual consistente e nada repetido em cada página.
+//  📘 O QUE É: Moldura RAIZ de todas as páginas (site e painel): <html>, idioma, fontes e o script do tema.
+//  ⚙️  COMO FUNCIONA: O Next.js envolve cada página com este layout. Abaixo dele há dois grupos:
+//      (site)/layout.tsx = site público (CSS Tailwind) e painel/layout.tsx = CRM (CSS próprio).
+//      O script aplica o tema salvo (claro/escuro) antes da tela pintar, para não piscar.
+//  🎓 NA BANCA: Estrutura em camadas: o que é comum fica aqui uma vez só; cada área tem o seu visual.
 //  ──────────────────────────────────────────────────────────────────────
 import type { Metadata } from "next";
 import { Special_Elite, Playfair_Display, DM_Sans } from "next/font/google";
-import "./globals.css";
+// O CSS do site (Tailwind) é carregado em (site)/layout.tsx; o painel tem o
+// próprio CSS em painel/layout.tsx. Assim um não interfere no visual do outro.
 
 // next/font baixa e autohospeda os arquivos no build — resolve de raiz o bug
 // registrado no HANDOFF (fontes apontando pro fonts.gstatic.com deram 404

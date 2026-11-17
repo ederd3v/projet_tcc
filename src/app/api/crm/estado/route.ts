@@ -4,8 +4,10 @@
 //  🎓 NA BANCA: É a ponte painel <-> banco: o painel é só a tela, quem guarda os dados é o PostgreSQL.
 //  ──────────────────────────────────────────────────────────────────────
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { ehStatusValido, STATUS_INICIAL } from "@/lib/status";
+import { totalDoPedido, validarPedido } from "@/lib/regrasPedido";
 
 export const dynamic = "force-dynamic";
 
@@ -73,24 +75,58 @@ export async function GET() {
   return NextResponse.json(estado);
 }
 
-type EstadoRecebido = {
-  carregadoEm?: string;
-  produtos?: { id: string; preco?: number; ativo?: boolean; estoque?: number }[];
-  clientes?: { id: string; nome: string; tel?: string; bairro?: string; notas?: string }[];
-  pedidos?: {
-    id: string;
-    data: string;
-    clienteId: string | null; // null = pedido que veio do site
-    status: string;
-    origem?: string;
-    pagamento?: string;
-    obs?: string;
-    itens: { pid: string; q: number; preco: number }[];
-  }[];
-};
+// Formato aceito no PUT, conferido campo a campo (Zod). Sem isto, um corpo
+// malformado (pedido sem itens, texto que não é JSON) estourava um erro
+// interno (500) em vez de responder "dados inválidos" (400) — achado pelos
+// testes em route.test.ts.
+const ItemRecebido = z.object({ pid: z.string(), q: z.number(), preco: z.number() });
+const EstadoRecebido = z.object({
+  carregadoEm: z.string().optional(),
+  produtos: z
+    .array(z.object({ id: z.string(), preco: z.number().optional(), ativo: z.boolean().optional(), estoque: z.number().optional() }))
+    .optional(),
+  clientes: z
+    .array(z.object({ id: z.string(), nome: z.string(), tel: z.string().optional(), bairro: z.string().optional(), notas: z.string().optional() }))
+    .optional(),
+  pedidos: z
+    .array(
+      z.object({
+        id: z.string(),
+        data: z.string(),
+        clienteId: z.string().nullable(), // null = pedido que veio do site
+        status: z.string(),
+        origem: z.string().optional(),
+        pagamento: z.string().optional(),
+        obs: z.string().optional(),
+        itens: z.array(ItemRecebido),
+      })
+    )
+    .optional(),
+});
 
 export async function PUT(req: Request) {
-  const corpo = (await req.json()) as EstadoRecebido;
+  let bruto: unknown;
+  try {
+    bruto = await req.json();
+  } catch {
+    return NextResponse.json({ ok: false, erro: "o corpo da requisição não é JSON" }, { status: 400 });
+  }
+  const lido = EstadoRecebido.safeParse(bruto);
+  if (!lido.success) {
+    const campo = lido.error.issues[0]?.path.join(".") || "corpo";
+    return NextResponse.json({ ok: false, erro: `dados inválidos em "${campo}"` }, { status: 400 });
+  }
+  const corpo = lido.data;
+
+  // RF05 no servidor: as mesmas regras do painel (src/lib/regrasPedido.ts).
+  // Se alguém mandar um pedido inválido direto para a API, nada é gravado.
+  const idsClientes = new Set((corpo.clientes ?? []).map((c) => c.id));
+  for (const o of corpo.pedidos ?? []) {
+    const problema = validarPedido(o, idsClientes);
+    if (problema) {
+      return NextResponse.json({ ok: false, erro: `Pedido ${o.id}: ${problema}` }, { status: 400 });
+    }
+  }
 
   try {
     await prisma.$transaction(
@@ -145,12 +181,9 @@ export async function PUT(req: Request) {
           });
         }
 
-        const pedidos = corpo.pedidos ?? [];
-        // Pedido apontando para um cliente que não existe quebraria a chave
-        // estrangeira. Pedido sem cliente (os do site) é válido e fica
-        // (issue #3: antes eles sumiam a cada salvamento do painel).
-        const idsClientesValidos = new Set((corpo.clientes ?? []).map((c) => c.id));
-        const validos = pedidos.filter((o) => !o.clienteId || idsClientesValidos.has(o.clienteId));
+        // Todos já passaram por validarPedido acima: cliente existe (ou é
+        // pedido do site ainda "novo"/"cancelado") e há pelo menos um item.
+        const validos = corpo.pedidos ?? [];
 
         if (validos.length) {
           await tx.pedido.createMany({
@@ -162,7 +195,7 @@ export async function PUT(req: Request) {
               origem: o.origem ?? "WhatsApp direto",
               pagamento: o.pagamento ?? null,
               observacao: o.obs || null,
-              total: o.itens.reduce((s, it) => s + it.q * it.preco, 0),
+              total: totalDoPedido(o.itens),
             })),
           });
 

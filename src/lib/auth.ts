@@ -47,7 +47,10 @@ export const authOptions: NextAuthOptions = {
         const ownerHash = process.env.OWNER_PASSWORD_HASH;
         if (!ownerEmail || !ownerHash) return null;
         if (!credentials?.email || !credentials?.password) return null;
-        if (credentials.email !== ownerEmail) return null;
+        // E-mail sem diferença de maiúsculas/espaços: o teclado do celular põe
+        // "Jaisson@..." com J maiúsculo sozinho (achado em auth.test.ts).
+        const normalizar = (e: string) => e.trim().toLowerCase();
+        if (normalizar(credentials.email) !== normalizar(ownerEmail)) return null;
         const valid = await bcrypt.compare(credentials.password, ownerHash);
         if (!valid) return null;
         return { id: "owner", email: ownerEmail, name: "Dono da Maruim" };

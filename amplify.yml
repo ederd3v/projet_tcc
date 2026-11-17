@@ -18,6 +18,9 @@ frontend:
         # O sed escapa os "$" (o hash bcrypt tem vários): o Next expande $VAR
         # dentro do .env e corromperia o valor.
         - env | grep -E '^(DATABASE_URL|NEXTAUTH_SECRET|NEXTAUTH_URL|OWNER_EMAIL|OWNER_PASSWORD_HASH|COGNITO_CLIENT_ID|COGNITO_CLIENT_SECRET|COGNITO_ISSUER)=' | sed 's/\$/\\$/g' >> .env.production || true
+        # Testes automáticos ANTES do build: se algum falhar, o deploy para aqui
+        # e a versão com erro não vai para o ar (o site continua na anterior).
+        - npm test
         # `npm run build` = prisma generate + prisma migrate deploy + next build.
         # O migrate deploy aplica no RDS só as migrações que faltam.
         - npm run build

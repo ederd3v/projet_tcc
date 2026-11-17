@@ -1,0 +1,155 @@
+//  ──────────────────────────────────────────────────────────────────────
+//  📘 O QUE É: O ESQUELETO (HTML) do painel: menu lateral, cabeçalho, as 5 telas
+//      vazias, a janela (modal), a gaveta (drawer) e o aviso (toast).
+//  ⚙️  COMO FUNCIONA: A página /painel coloca este HTML na tela; depois o
+//      núcleo (nucleo.ts) preenche cada parte com os dados do banco. Cada
+//      elemento tem um id (ex.: "k-pedidos") que o código usa para achá-lo.
+//  🎓 NA BANCA: Estrutura separada da lógica — mudar o visual não mexe nas regras.
+//  ──────────────────────────────────────────────────────────────────────
+
+export const ESTRUTURA_PAINEL = `
+<div class="app">
+  <nav class="rail" aria-label="Menu principal">
+    <div class="logo" aria-hidden="true">M</div>
+    <button class="nav on" data-view="geral" aria-label="Visão geral"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg><span class="tip">Visão geral</span></button>
+    <button class="nav" data-view="pedidos" aria-label="Pedidos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span class="tip">Pedidos</span></button>
+    <button class="nav" data-view="clientes" aria-label="Clientes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M17 4a4 4 0 0 1 0 8"/><path d="M22 21a6 6 0 0 0-4-5.6"/></svg><span class="tip">Clientes</span></button>
+    <button class="nav" data-view="produtos" aria-label="Produtos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2h4v4l2 3v11a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V9l2-3z"/><path d="M8 13h8"/></svg><span class="tip">Produtos</span></button>
+    <button class="nav" data-view="origem" aria-label="Origem e vendas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 6-6"/></svg><span class="tip">Origem e vendas</span></button>
+    <div class="grow"></div>
+    <button class="nav cfg" id="btn-reset" aria-label="Restaurar dados de exemplo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="tip">Restaurar dados de exemplo</span></button>
+  </nav>
+
+  <main>
+    <header class="top">
+      <div>
+        <p class="kicker" id="greeting">Bebidas Maruim</p>
+        <h1 id="page-h1">Visão geral <em id="period-label"></em></h1>
+      </div>
+      <div class="actions">
+        <label class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="busca" placeholder="Buscar cliente ou pedido" aria-label="Buscar cliente ou número do pedido"></label>
+        <button class="cta" data-action="novo-pedido"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Novo pedido</button>
+      </div>
+    </header>
+
+    <div class="toolbar" id="periodo-bar">
+      <div class="chips" role="group" aria-label="Período">
+        <button class="chip" data-periodo="hoje">Hoje</button>
+        <button class="chip" data-periodo="7">7 dias</button>
+        <button class="chip on" data-periodo="30">30 dias</button>
+        <button class="chip" data-periodo="mes">Este mês</button>
+        <button class="chip" data-periodo="60">60 dias</button>
+      </div>
+      <label class="datepick" id="datepick"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg><input type="date" id="dia" aria-label="Ver um dia específico"></label>
+      <span class="hint" id="periodo-hint"></span>
+      <div class="dados-acoes">
+        <button class="chip" id="btn-embaralhar" title="Gera um movimento fictício novo, só para apresentar">Embaralhar dados</button>
+        <button class="chip" id="btn-limpar" title="Apaga pedidos e clientes e mantém o catálogo">Limpar dados</button>
+      </div>
+    </div>
+
+    <!-- Visão geral -->
+    <section class="view on" id="v-geral">
+      <div class="grid kpis">
+        <article class="card kpi hero" data-goto="pedidos" tabindex="0">
+          <span class="stamp">no período</span>
+          <div class="label">Pedidos</div>
+          <div class="value" id="k-pedidos">0</div>
+          <span class="delta" id="k-pedidos-d"></span><span class="foot">vs. período anterior</span>
+          <span class="arrow" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+        </article>
+        <article class="card kpi" data-goto="origem" tabindex="0"><div class="label">Faturamento</div><div class="value" id="k-fat"></div><span class="delta" id="k-fat-d"></span></article>
+        <article class="card kpi" data-goto="origem" tabindex="0"><div class="label">Ticket médio</div><div class="value" id="k-ticket"></div><span class="delta" id="k-ticket-d"></span></article>
+        <article class="card kpi" data-goto="clientes" tabindex="0"><div class="label">Clientes que compraram</div><div class="value" id="k-cli"></div><span class="foot" style="margin:0" id="k-cli-new"></span></article>
+      </div>
+
+      <div class="grid row2">
+        <article class="card">
+          <div class="head"><div><h2>Mais vendidos</h2><p class="sub">Unidades vendidas no período</p></div><span class="pill tabnum" id="units-total"></span></div>
+          <div class="podium" id="podium"></div>
+          <div class="shares" id="shares"></div>
+        </article>
+        <article class="card">
+          <div class="head"><div><h2>Evolução do faturamento</h2><p class="sub" id="area-sub">Clique num dia para ver só ele</p></div><span class="pill tabnum" id="best-day"></span></div>
+          <div id="chart-area"></div>
+          <div class="cats" id="cats"></div>
+        </article>
+      </div>
+
+      <div class="grid row3">
+        <article class="card">
+          <div class="head"><div><h2>Pedidos recentes</h2><p class="sub">Clique num pedido para ver, mudar o status ou editar</p></div><button class="btn sm" data-goto="pedidos">Ver todos</button></div>
+          <div style="overflow-x:auto"><table><thead><tr><th>Pedido</th><th>Cliente</th><th class="hide-sm">Itens</th><th class="hide-sm">Origem</th><th>Status</th><th class="right">Total</th></tr></thead><tbody id="orders"></tbody></table></div>
+        </article>
+        <div class="stack">
+          <article class="card">
+            <div class="head"><div><h2>De onde vêm os pedidos</h2><p class="sub">Origem registrada em cada pedido</p></div></div>
+            <div id="chart-origem"></div>
+          </article>
+          <article class="card">
+            <div class="head"><div><h2>Chamar de volta</h2><p class="sub">Clientes que compravam e sumiram há mais de 30 dias</p></div></div>
+            <div class="people" id="people"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pedidos -->
+    <section class="view" id="v-pedidos">
+      <div class="toolbar">
+        <div class="chips" role="group" aria-label="Forma de ver">
+          <button class="chip on" data-modo="kanban">Quadro</button>
+          <button class="chip" data-modo="lista">Lista</button>
+        </div>
+        <span class="hint">Arraste o card para mudar a etapa</span>
+        <div class="dados-acoes">
+          <button class="chip" id="btn-limpar-pedidos" title="Apaga todos os pedidos; clientes e catálogo ficam">Limpar pedidos</button>
+        </div>
+      </div>
+      <div id="pedidos-body"></div>
+    </section>
+
+    <!-- Clientes -->
+    <section class="view" id="v-clientes">
+      <div class="toolbar"><button class="btn primary" data-action="novo-cliente">+ Novo cliente</button><span class="hint" id="cli-hint"></span>
+        <div class="dados-acoes">
+          <button class="chip" id="btn-limpar-clientes" title="Apaga os clientes e os pedidos deles">Limpar clientes</button>
+        </div></div>
+      <article class="card" style="padding:10px 12px"><div style="overflow-x:auto"><table><thead><tr><th>Cliente</th><th class="hide-sm">Bairro</th><th class="right">Pedidos</th><th class="right">Total gasto</th><th class="hide-sm">Último pedido</th><th></th></tr></thead><tbody id="clientes-body"></tbody></table></div></article>
+    </section>
+
+    <!-- Produtos -->
+    <section class="view" id="v-produtos">
+      <div class="toolbar">
+        <div class="chips" role="group" aria-label="Categoria">
+          <button class="chip on" data-cat="todos">Todos</button>
+          <button class="chip" data-cat="licor">Licores</button>
+          <button class="chip" data-cat="kombucha">Kombuchas</button>
+          <button class="chip" data-cat="ice">Ice</button>
+        </div>
+        <span class="hint">Preço e estoque salvam sozinhos ao sair do campo</span>
+      </div>
+      <div class="prod-grid" id="produtos-body"></div>
+    </section>
+
+    <!-- Origem e vendas -->
+    <section class="view" id="v-origem">
+      <article class="card"><div class="head"><div><h2>Faturamento por dia</h2><p class="sub">Clique num dia para ver só ele</p></div><span class="pill tabnum" id="o-total"></span></div><div id="o-area"></div></article>
+      <div class="row-charts">
+        <article class="card"><div class="head"><div><h2>Faturamento por categoria</h2><p class="sub">A maior fica em destaque</p></div></div><div id="o-barras"></div></article>
+        <article class="card"><div class="head"><div><h2>Pedidos por origem</h2><p class="sub">Site, WhatsApp, Instagram e indicação</p></div></div><div id="o-rosca"></div></article>
+      </div>
+      <div class="row-charts">
+        <article class="card"><div class="head"><div><h2>Top 8 sabores</h2><p class="sub">Faturamento no período</p></div></div><div id="o-sabores"></div></article>
+        <article class="card"><div class="head"><div><h2>Formas de pagamento</h2><p class="sub">Pedidos no período</p></div></div><div id="o-pagto"></div></article>
+      </div>
+    </section>
+
+    <p class="demo">Dados salvos no banco PostgreSQL (Amazon RDS) · "Embaralhar dados" gera um movimento fictício só para apresentar</p>
+  </main>
+</div>
+
+<div class="overlay" id="modal" role="dialog" aria-modal="true"><div class="modal" id="modal-body"></div></div>
+<div class="overlay drawer" id="drawer" role="dialog" aria-modal="true"><div class="modal" id="drawer-body"></div></div>
+<div class="toast" id="toast" role="status"></div>
+`;

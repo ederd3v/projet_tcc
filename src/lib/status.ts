@@ -1,6 +1,6 @@
 // Etapas do pedido, na ordem em que aparecem no quadro do painel.
 //
-// Os valores precisam casar com `STATUS` em public/painel/assets/js/data.js:
+// Os valores precisam casar com `STATUS` em src/painel/dados.ts:
 // é por esse identificador que o painel decide em qual coluna o pedido cai.
 // Um valor fora desta lista some do quadro sem erro nenhum — por isso existe
 // aqui, para validar antes de gravar.
