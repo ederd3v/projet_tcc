@@ -121,8 +121,11 @@ export async function PUT(req: Request) {
   // RF05 no servidor: as mesmas regras do painel (src/lib/regrasPedido.ts).
   // Se alguém mandar um pedido inválido direto para a API, nada é gravado.
   const idsClientes = new Set((corpo.clientes ?? []).map((c) => c.id));
+  // Produtos vêm do banco (o painel não cria nem apaga produto), para um item
+  // com produto inexistente ser recusado aqui, e não pela chave estrangeira.
+  const idsProdutos = new Set((await prisma.produto.findMany({ select: { id: true } })).map((p) => p.id));
   for (const o of corpo.pedidos ?? []) {
-    const problema = validarPedido(o, idsClientes);
+    const problema = validarPedido(o, idsClientes, idsProdutos);
     if (problema) {
       return NextResponse.json({ ok: false, erro: `Pedido ${o.id}: ${problema}` }, { status: 400 });
     }

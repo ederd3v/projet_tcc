@@ -39,10 +39,15 @@ export function totalDoPedido(itens: PedidoParaValidar["itens"]): number {
  *
  * @param idsClientes ids dos clientes que existem — para não gravar um pedido
  *                    apontando para cliente apagado (o banco recusaria).
+ * @param idsProdutos ids dos produtos que existem. Opcional: sem ele, o produto
+ *                    não é conferido. A API sempre passa (lidos do banco), para
+ *                    um item de produto apagado dar 400 com mensagem clara em
+ *                    vez de 500 pela chave estrangeira (revisão do PR #5).
  */
-export function validarPedido(o: PedidoParaValidar, idsClientes: Set<string>): string | null {
+export function validarPedido(o: PedidoParaValidar, idsClientes: Set<string>, idsProdutos?: Set<string>): string | null {
   if (!o.itens.length) return "O pedido precisa de pelo menos um item.";
   if (o.itens.some((it) => !it.pid)) return "Há um item sem produto escolhido.";
+  if (idsProdutos && o.itens.some((it) => !idsProdutos.has(it.pid))) return "Um dos produtos do pedido não existe mais.";
   if (o.itens.some((it) => !Number.isInteger(it.q) || it.q < 1)) return "Quantidade inválida em um dos itens.";
   if (o.itens.some((it) => !(it.preco >= 0))) return "Preço inválido em um dos itens.";
 

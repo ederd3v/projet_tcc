@@ -8,6 +8,7 @@ let estadoDoServidor: Estado;
 function fixture(): Estado {
   return {
     versao: 3,
+    carregadoEm: "2026-11-18T12:00:00.000Z",
     produtos: [
       { id: "p1", nome: "Licor de Figo", cat: "licor", preco: 40, img: "/products/licor-figo.png", ativo: true, estoque: 10 },
       { id: "p2", nome: "Ice Limão", cat: "ice", preco: 7.5, img: "licor-antigo.jpg", ativo: true, estoque: 1 },
@@ -103,6 +104,26 @@ describe("clientes (RF04)", () => {
   });
   it("cliente(null) não quebra (pedido do site)", () => {
     expect(D.cliente(null)).toBeUndefined();
+  });
+});
+
+describe("trocar o estado inteiro mantém o carregadoEm (revisão do PR #5, issue #3)", () => {
+  const ultimoPut = () => respostas.filter((r) => r.metodo === "PUT").at(-1)?.corpo;
+  it.each([
+    ["limpar", () => D.limpar()],
+    ["resetar", () => D.resetar()],
+    ["embaralhar", () => D.embaralhar()],
+  ])("%s mantém o carregadoEm e o envia no PUT", async (_nome, acao) => {
+    acao();
+    expect(D.estado.carregadoEm).toBe("2026-11-18T12:00:00.000Z");
+    await vi.waitFor(() => expect(ultimoPut()?.carregadoEm).toBe("2026-11-18T12:00:00.000Z"));
+  });
+  it("limpar mantém o catálogo e zera estoque, clientes e pedidos", () => {
+    D.limpar();
+    expect(D.estado.produtos).toHaveLength(2);
+    expect(D.estado.produtos.every((p) => p.estoque === 0)).toBe(true);
+    expect(D.estado.clientes).toHaveLength(0);
+    expect(D.estado.pedidos).toHaveLength(0);
   });
 });
 

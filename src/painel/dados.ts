@@ -180,15 +180,21 @@ export function salvar(): Promise<void> {
 /** Permite ao núcleo mostrar um aviso na tela quando o banco recusar. */
 export function aoFalharSalvar(fn: (e: Error) => void): void { aoFalhar = fn; }
 
-export function resetar(): void { estado = gerarExemplo(); void salvar(); }
+/* Toda troca do estado inteiro mantém o `carregadoEm` que veio do banco: é
+   ele que diz à API quais pedidos do site chegaram com o painel aberto. Sem
+   ele, o próximo salvamento apagaria esses pedidos (issue #3 de volta —
+   achado pelo Sidney na revisão do PR #5). */
+function trocarEstado(novo: Estado): void { estado = { ...novo, carregadoEm: estado.carregadoEm }; }
+
+export function resetar(): void { trocarEstado(gerarExemplo()); void salvar(); }
 
 /** Só para apresentar: gera um movimento fictício novo (semente = relógio). */
-export function embaralhar(): void { estado = gerarExemplo(Date.now() % 4294967296); void salvar(); }
+export function embaralhar(): void { trocarEstado(gerarExemplo(Date.now() % 4294967296)); void salvar(); }
 
 /* Começar a usar de verdade: apaga clientes e pedidos e mantém o catálogo,
    que é real. O estoque zera porque vinha dos dados de exemplo. */
 export function limpar(): void {
-  estado = { versao: 2, produtos: estado.produtos.map((p) => ({ ...p, estoque: 0 })), clientes: [], pedidos: [] };
+  trocarEstado({ ...estado, produtos: estado.produtos.map((p) => ({ ...p, estoque: 0 })), clientes: [], pedidos: [] });
   void salvar();
 }
 

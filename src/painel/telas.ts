@@ -181,7 +181,7 @@ export function formPedido(id?: string): void {
       pagamento: $<HTMLSelectElement>("#f-pag", corpo).value, obs: $<HTMLInputElement>("#f-obs", corpo).value.trim(),
     };
     // Mesmas regras que o servidor confere (src/lib/regrasPedido.ts).
-    const problema = validarPedido({ ...dados, status: o?.status ?? "novo" }, new Set(D.estado.clientes.map((c) => c.id)));
+    const problema = validarPedido({ ...dados, status: o?.status ?? "novo" }, new Set(D.estado.clientes.map((c) => c.id)), new Set(D.estado.produtos.map((p) => p.id)));
     if (problema) { err.textContent = problema; return; }
     if (o) dados.id = o.id; else dados.status = "novo";
     const salvo = D.salvarPedido(dados);

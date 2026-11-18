@@ -45,6 +45,7 @@ describe("GET /api/crm/estado", () => {
 });
 
 describe("PUT /api/crm/estado — regras do RF05 no servidor", () => {
+  beforeEach(() => { db.produto.findMany.mockResolvedValue([{ id: "p1" }]); });
   it("grava estado válido (dentro de uma transação)", async () => {
     const r = await enviar({ clientes: [cliente], pedidos: [pedido({})], produtos: [] });
     expect(r.status).toBe(200);
@@ -64,6 +65,12 @@ describe("PUT /api/crm/estado — regras do RF05 no servidor", () => {
   it("recusa pedido de cliente que não existe", async () => {
     const r = await enviar({ clientes: [cliente], pedidos: [pedido({ clienteId: "fantasma" })] });
     expect(r.status).toBe(400);
+  });
+  it("recusa item de produto que não existe — 400 com mensagem clara, não 500 (revisão do PR #5)", async () => {
+    const r = await enviar({ clientes: [cliente], pedidos: [pedido({ itens: [{ ...item, pid: "apagado" }] })] });
+    expect(r.status).toBe(400);
+    expect((await r.json()).erro).toMatch(/Pedido o1: Um dos produtos do pedido não existe mais/);
+    expect(transacao).not.toHaveBeenCalled();
   });
   it("recusa pedido sem itens", async () => {
     const r = await enviar({ clientes: [cliente], pedidos: [pedido({ itens: [] })] });

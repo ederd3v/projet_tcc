@@ -38,6 +38,19 @@ describe("validarPedido — itens", () => {
   });
 });
 
+describe("validarPedido — produto inexistente (revisão do PR #5)", () => {
+  const produtos = new Set(["p1"]);
+  it("recusa item de produto que não existe mais", () => {
+    expect(validarPedido({ ...base, itens: [{ ...item, pid: "apagado" }] }, clientes, produtos)).toMatch(/produtos do pedido não existe/);
+  });
+  it("aceita quando todos os produtos existem", () => {
+    expect(validarPedido(base, clientes, new Set([...base.itens.map((it) => it.pid)]))).toBeNull();
+  });
+  it("sem a lista de produtos, não confere o produto (compatível com chamadas antigas)", () => {
+    expect(validarPedido({ ...base, itens: [{ ...item, pid: "qualquer" }] }, clientes)).toBeNull();
+  });
+});
+
 describe("validarPedido — pedido do site sem cliente", () => {
   const doSite: PedidoParaValidar = { ...base, clienteId: null, origem: "Site" };
   it("aceita enquanto está 'novo'", () => {
