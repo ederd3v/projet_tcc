@@ -75,6 +75,11 @@ md += `\n## Bugs que os testes encontraram (e foram corrigidos)\n
 1. **API do CRM respondia erro interno (500) a dados malformados** → agora valida com Zod e responde 400 sem gravar.
 2. **Telefone digitado com +55 gerava link do WhatsApp errado** (wa.me/555547…) → \`normalizarTelefone\`.
 3. **Login recusava e-mail com letra maiúscula/espaço** (teclado do celular) → comparação normalizada.
+
+## Bugs que a revisão da squad encontrou (PR #5, 18/11)
+
+4. **"Limpar", "Resetar" e "Embaralhar" perdiam o \`carregadoEm\`** e o salvamento seguinte apagava pedidos do site que chegaram com o painel aberto (a issue #3 voltava) → \`trocarEstado()\` mantém o campo; testes em \`src/painel/dados.test.ts\`.
+5. **Pedido com produto que não existe mais virava erro 500** → \`validarPedido\` confere os produtos e a API responde 400; testes em \`src/lib/regrasPedido.test.ts\` e na rota.
 `;
 
 writeFileSync(path.join(raiz, "RELATORIO-DE-TESTES.md"), md);

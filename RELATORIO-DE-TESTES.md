@@ -1,8 +1,8 @@
 # 🧪 Relatório de testes automáticos — Bebidas Maruim
 
-- **Gerado em:** 16/11/2026, 08:45:26 (horário de Brasília)
+- **Gerado em:** 23/11/2026, 07:59:58 (horário de Brasília)
 - **Ferramenta:** Vitest · banco **simulado** (os testes não precisam de PostgreSQL)
-- **Resultado:** **153 de 153 testes passaram** · 0 falharam · 13 arquivos
+- **Resultado:** **161 de 161 testes passaram** · 0 falharam · 13 arquivos
 - **Como gerar de novo:** `npm run test:relatorio` (VS Code → Executar Tarefa → 🧪 Relatório de testes)
 - **No deploy:** o `amplify.yml` roda `npm test` antes do build — se um teste falhar, a versão nova não vai para o ar.
 
@@ -11,16 +11,16 @@
 | Arquivo de teste | Requisito coberto | Testes | Resultado |
 |---|---|---|---|
 | `prisma/catalogo.test.ts` | RF01 (catálogo: fotos, notas, preços) | 50 | ✅ 50/50 |
-| `src/app/api/crm/estado/route.test.ts` | RF04–RF07 + RF05 no servidor | 10 | ✅ 10/10 |
+| `src/app/api/crm/estado/route.test.ts` | RF04–RF07 + RF05 no servidor | 11 | ✅ 11/11 |
 | `src/app/api/pedido-do-site/route.test.ts` | RF02 + segurança (preço do banco) | 12 | ✅ 12/12 |
 | `src/lib/auth.test.ts` | RF03 / RNF03 (login do dono) | 8 | ✅ 8/8 |
 | `src/lib/categorias.test.ts` | RF01 (linhas de produto e menu) | 3 | ✅ 3/3 |
 | `src/lib/maisPedido.test.ts` | RF01 (selo 'Mais pedido') | 4 | ✅ 4/4 |
-| `src/lib/regrasPedido.test.ts` | RF05 (pedido com cliente e itens) | 20 | ✅ 20/20 |
+| `src/lib/regrasPedido.test.ts` | RF05 (pedido com cliente e itens) | 23 | ✅ 23/23 |
 | `src/lib/status.test.ts` | RF05 (etapas do pedido) | 3 | ✅ 3/3 |
 | `src/lib/whatsapp.test.ts` | RF02 (WhatsApp com mensagem pronta) | 5 | ✅ 5/5 |
 | `src/middleware.test.ts` | RNF03 (CRM só com login) | 5 | ✅ 5/5 |
-| `src/painel/dados.test.ts` | RF04 (clientes), RF05, RF07 (estoque) | 14 | ✅ 14/14 |
+| `src/painel/dados.test.ts` | RF04 (clientes), RF05, RF07 (estoque) | 18 | ✅ 18/18 |
 | `src/painel/graficos.test.ts` | painel (relatórios visuais) | 7 | ✅ 7/7 |
 | `src/painel/util.test.ts` | segurança (XSS), telefone, datas | 12 | ✅ 12/12 |
 
@@ -29,7 +29,7 @@
 | Arquivo | Linhas | Funções | Ramificações |
 |---|---|---|---|
 | `src/app/api/auth/[...nextauth]/route.ts` | 0% | 0% | 0% |
-| `src/app/api/crm/estado/route.ts` | 92.02% | 100% | 67.5% |
+| `src/app/api/crm/estado/route.ts` | 92.07% | 100% | 69.04% |
 | `src/app/api/pedido-do-site/route.ts` | 100% | 100% | 87.5% |
 | `src/lib/auth.ts` | 100% | 100% | 100% |
 | `src/lib/categorias.ts` | 100% | 100% | 100% |
@@ -39,12 +39,12 @@
 | `src/lib/regrasPedido.ts` | 100% | 100% | 100% |
 | `src/lib/status.ts` | 100% | 100% | 100% |
 | `src/lib/whatsapp.ts` | 100% | 100% | 100% |
-| `src/painel/dados.ts` | 96.77% | 86.36% | 93.26% |
+| `src/painel/dados.ts` | 98.39% | 95.65% | 94.44% |
 | `src/painel/graficos.ts` | 81.15% | 60.71% | 73% |
 | `src/painel/nucleo.ts` | 0% | 100% | 100% |
 | `src/painel/telas.ts` | 0% | 100% | 100% |
 | `src/painel/util.ts` | 91.66% | 91.66% | 89.28% |
-| **Total** | **53.12%** | **80.24%** | **84.3%** |
+| **Total** | **53.42%** | **82.92%** | **85.07%** |
 
 > `src/painel/nucleo.ts` e `telas.ts` são a interface do painel (cliques e telas): são cobertos pelo **teste de ponta a ponta** no navegador (login → 5 telas → regra do pedido → excluir cliente → celular), não por teste unitário.
 
@@ -110,6 +110,7 @@
 - ✅ PUT /api/crm/estado — regras do RF05 no servidor › recusa pedido do site 'confirmado' sem cliente — e não grava nada
 - ✅ PUT /api/crm/estado — regras do RF05 no servidor › aceita pedido do site 'novo' sem cliente
 - ✅ PUT /api/crm/estado — regras do RF05 no servidor › recusa pedido de cliente que não existe
+- ✅ PUT /api/crm/estado — regras do RF05 no servidor › recusa item de produto que não existe — 400 com mensagem clara, não 500 (revisão do PR #5)
 - ✅ PUT /api/crm/estado — regras do RF05 no servidor › recusa pedido sem itens
 - ✅ PUT /api/crm/estado — regras do RF05 no servidor › status desconhecido é gravado como 'novo' (não some do quadro)
 - ✅ PUT /api/crm/estado — regras do RF05 no servidor › corpo malformado (pedido sem a lista de itens) responde 400, não 500
@@ -169,6 +170,9 @@
 - ✅ validarPedido — itens › recusa preço inválido (-0.01)
 - ✅ validarPedido — itens › recusa preço inválido (NaN)
 - ✅ validarPedido — itens › aceita preço zero (brinde)
+- ✅ validarPedido — produto inexistente (revisão do PR #5) › recusa item de produto que não existe mais
+- ✅ validarPedido — produto inexistente (revisão do PR #5) › aceita quando todos os produtos existem
+- ✅ validarPedido — produto inexistente (revisão do PR #5) › sem a lista de produtos, não confere o produto (compatível com chamadas antigas)
 - ✅ validarPedido — pedido do site sem cliente › aceita enquanto está 'novo'
 - ✅ validarPedido — pedido do site sem cliente › aceita 'cancelado' (descartar um pedido que não virou venda)
 - ✅ validarPedido — pedido do site sem cliente › recusa 'confirmado' sem cliente associado
@@ -213,6 +217,10 @@
 - ✅ clientes (RF04) › excluirCliente remove o cliente e os pedidos dele (os do site sem dono ficam)
 - ✅ clientes (RF04) › limparClientes mantém só os pedidos do site sem cliente
 - ✅ clientes (RF04) › cliente(null) não quebra (pedido do site)
+- ✅ trocar o estado inteiro mantém o carregadoEm (revisão do PR #5, issue #3) › limpar mantém o carregadoEm e o envia no PUT
+- ✅ trocar o estado inteiro mantém o carregadoEm (revisão do PR #5, issue #3) › resetar mantém o carregadoEm e o envia no PUT
+- ✅ trocar o estado inteiro mantém o carregadoEm (revisão do PR #5, issue #3) › embaralhar mantém o carregadoEm e o envia no PUT
+- ✅ trocar o estado inteiro mantém o carregadoEm (revisão do PR #5, issue #3) › limpar mantém o catálogo e zera estoque, clientes e pedidos
 - ✅ salvar › cliques em sequência não geram fila: no máximo 1 envio extra
 - ✅ salvar › erro do banco chega ao aviso da tela
 - ✅ salvar › embaralhar gera dados de exemplo válidos para as regras do RF05
@@ -247,3 +255,8 @@
 1. **API do CRM respondia erro interno (500) a dados malformados** → agora valida com Zod e responde 400 sem gravar.
 2. **Telefone digitado com +55 gerava link do WhatsApp errado** (wa.me/555547…) → `normalizarTelefone`.
 3. **Login recusava e-mail com letra maiúscula/espaço** (teclado do celular) → comparação normalizada.
+
+## Bugs que a revisão da squad encontrou (PR #5, 18/11)
+
+4. **"Limpar", "Resetar" e "Embaralhar" perdiam o `carregadoEm`** e o salvamento seguinte apagava pedidos do site que chegaram com o painel aberto (a issue #3 voltava) → `trocarEstado()` mantém o campo; testes em `src/painel/dados.test.ts`.
+5. **Pedido com produto que não existe mais virava erro 500** → `validarPedido` confere os produtos e a API responde 400; testes em `src/lib/regrasPedido.test.ts` e na rota.

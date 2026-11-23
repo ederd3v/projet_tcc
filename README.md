@@ -126,7 +126,7 @@ npm test                 # roda todos os testes (Vitest)
 npm run test:cobertura   # mostra quanto do código os testes exercitam (abre coverage/index.html)
 ```
 
-São 153 testes em 13 arquivos, cada um ao lado do código que testa (`*.test.ts`).
+São 161 testes em 13 arquivos, cada um ao lado do código que testa (`*.test.ts`).
 O registro completo (cada teste + requisito + cobertura) está em `RELATORIO-DE-TESTES.md`
 (`npm run test:relatorio` gera de novo):
 
