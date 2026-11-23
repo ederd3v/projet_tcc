@@ -188,6 +188,10 @@ habilitado · upgrade automático de versões menores habilitado · criado em 10
   podiam apagar pedidos do site que chegaram com o painel aberto, e um produto
   inexistente no pedido virava erro 500 (agora 400). Os dois foram corrigidos com
   8 testes novos, que falham no código antigo.
+- **Limitação conhecida (apontada na revisão):** o painel salva o estado inteiro, então
+  com dois aparelhos editando ao mesmo tempo vale o último que salvar. Os pedidos que
+  chegam pelo site estão protegidos (`carregadoEm`). Como o painel é de um dono só, ficou
+  como evolução: responder 409 se houve gravação depois que o painel foi carregado.
 - **Teste de ponta a ponta** (Chrome automatizado): login → 5 telas → regra do
   pedido do site → excluir cliente → visão de celular.
 
