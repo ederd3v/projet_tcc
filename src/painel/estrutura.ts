@@ -18,6 +18,7 @@ export const ESTRUTURA_PAINEL = `
     <button class="nav" data-view="origem" aria-label="Origem e vendas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 6-6"/></svg><span class="tip">Origem e vendas</span></button>
     <div class="grow"></div>
     <button class="nav cfg" id="btn-reset" aria-label="Restaurar dados de exemplo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="tip">Restaurar dados de exemplo</span></button>
+    <button class="nav sair" id="btn-sair" aria-label="Sair do painel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg><span class="tip">Sair</span></button>
   </nav>
 
   <main>

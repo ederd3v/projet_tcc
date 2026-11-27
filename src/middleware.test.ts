@@ -1,5 +1,6 @@
 // Testes do "porteiro": quais endereços exigem login (RNF03).
 import { describe, expect, it, vi } from "vitest";
+import { ESTRUTURA_PAINEL } from "./painel/estrutura";
 
 vi.mock("next-auth/middleware", () => ({ withAuth: (o: unknown) => o }));
 const mod = await import("./middleware");
@@ -22,5 +23,12 @@ describe("middleware de login", () => {
   });
   it("a própria tela de login fica liberada (senão seria um laço)", () => {
     expect(autorizado("/crm/login", null)).toBe(true);
+  });
+});
+
+describe("sair do painel", () => {
+  it("o painel tem o botão Sair, que encerra a sessão (signOut em nucleo.ts)", () => {
+    expect(ESTRUTURA_PAINEL).toContain('id="btn-sair"');
+    expect(ESTRUTURA_PAINEL).toContain('aria-label="Sair do painel"');
   });
 });

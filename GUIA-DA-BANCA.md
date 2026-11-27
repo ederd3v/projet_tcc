@@ -20,7 +20,7 @@ RFC pediu, onde está no código, como provar que funciona e o que mudou (e por 
    4. Associar o cliente → confirmar → abrir a ficha do cliente → **histórico** (RF06).
    5. Desligar um produto em **Produtos** → recarregar o site → ele sumiu (RF01/RF07).
 4. **Arquitetura** (seção 3 deste guia) e **onde cada requisito está** (seção 4).
-5. **Qualidade:** 161 testes automáticos rodando no deploy (registro em `RELATORIO-DE-TESTES.md`), TypeScript estrito, Lighthouse.
+5. **Qualidade:** 162 testes automáticos rodando no deploy (registro em `RELATORIO-DE-TESTES.md`), TypeScript estrito, Lighthouse.
 6. **Divergências do RFC** e a justificativa de cada uma (seção 6) — mostrar, não esconder.
 
 ---
@@ -150,7 +150,7 @@ habilitado · upgrade automático de versões menores habilitado · criado em 10
 
 | Item do RFC | Status | Como está |
 |---|---|---|
-| CRM protegido por Cognito | ⚠️ | login próprio: senha só como **hash bcrypt**, sessão JWT, e-mail normalizado |
+| CRM protegido por Cognito | ⚠️ | login próprio: senha só como **hash bcrypt**, sessão JWT em cookie `HttpOnly; Secure; SameSite=Lax`, e-mail normalizado, botão **Sair** (`signOut`) |
 | RDS em sub-rede privada | ⚠️ | RDS **público** (o Amplify SSR não roda dentro da VPC), compensado com **SSL obrigatório**, senha aleatória de 40 caracteres e security group só na porta 5432 |
 | Credenciais por IAM/variáveis | ✅ | segredos só em variáveis do Amplify; nenhuma credencial no navegador nem no Git |
 | HTTPS em tudo | ✅ | Amplify/CloudFront |
@@ -168,13 +168,13 @@ habilitado · upgrade automático de versões menores habilitado · criado em 10
 | Fluxo WhatsApp | mensagem correta em todos | 22/22 produtos | ✅ |
 | CRM operacional | dono usa sem ajuda | login em produção ok; falta o Jaisson usar sozinho | ⏳ |
 | Performance mobile | < 2 s / Lighthouse > 80 | Lighthouse **87**, acessibilidade **100**, SEO 100 | ✅ / ⚠️ LCP |
-| Código tipado | 100% TS sem erros | 100% TS, 0 erros, 161 testes | ✅ |
+| Código tipado | 100% TS sem erros | 100% TS, 0 erros, 162 testes | ✅ |
 
 ---
 
 ## 5. Qualidade e testes
 
-- **161 testes automáticos** (Vitest) em 13 arquivos `*.test.ts`, ao lado do código — todos passando.
+- **162 testes automáticos** (Vitest) em 13 arquivos `*.test.ts`, ao lado do código — todos passando.
   Rodar: `npm test` · VS Code → Terminal → Executar Tarefa → **🧪 Rodar testes** · aba **Testes** (ícone de frasco).
 - **Registro para a auditoria:** `RELATORIO-DE-TESTES.md` lista cada teste, o requisito do RFC que ele
   cobre e a cobertura por arquivo (gerado por `npm run test:relatorio`, com data e hora).
@@ -237,5 +237,5 @@ O RDS tem backup automático; a estrutura é recriada do zero pelas migrations
 (`prisma migrate deploy`) e o catálogo pelo `prisma/catalogo.ts`.
 
 **"Como sabem que está funcionando?"**
-161 testes rodando a cada deploy, Lighthouse medido no ar e o script
+162 testes rodando a cada deploy, Lighthouse medido no ar e o script
 `prisma/scripts/validar-banco.sql` conferindo a integridade do banco na AWS.

@@ -7,6 +7,7 @@
 //  🎓 NA BANCA: É o "maestro": não guarda dados (isso é dados.ts) nem desenha
 //      as outras telas (isso é telas.ts) — só coordena.
 //  ──────────────────────────────────────────────────────────────────────
+import { signOut } from "next-auth/react";
 import * as D from "./dados";
 import * as G from "./graficos";
 import * as Telas from "./telas";
@@ -306,6 +307,10 @@ function ligarEventos(): void {
     const g = (e.target as HTMLElement).closest?.<HTMLElement>("[data-goto],[data-action]");
     if (g && g.tagName !== "BUTTON") g.click();
   });
+
+  // Sair (RF03): o NextAuth apaga o cookie da sessão e volta para a tela de login.
+  // Depois disso o middleware barra o painel e a API de novo.
+  $("#btn-sair").addEventListener("click", () => { void signOut({ callbackUrl: "/crm/login" }); });
 
   $("#btn-reset").addEventListener("click", () => {
     if (!confirm("Apagar tudo o que foi alterado e voltar aos dados de exemplo?")) return;

@@ -1,8 +1,8 @@
 # 🧪 Relatório de testes automáticos — Bebidas Maruim
 
-- **Gerado em:** 23/11/2026, 07:59:58 (horário de Brasília)
+- **Gerado em:** 27/11/2026, 09:27:51 (horário de Brasília)
 - **Ferramenta:** Vitest · banco **simulado** (os testes não precisam de PostgreSQL)
-- **Resultado:** **161 de 161 testes passaram** · 0 falharam · 13 arquivos
+- **Resultado:** **162 de 162 testes passaram** · 0 falharam · 13 arquivos
 - **Como gerar de novo:** `npm run test:relatorio` (VS Code → Executar Tarefa → 🧪 Relatório de testes)
 - **No deploy:** o `amplify.yml` roda `npm test` antes do build — se um teste falhar, a versão nova não vai para o ar.
 
@@ -19,7 +19,7 @@
 | `src/lib/regrasPedido.test.ts` | RF05 (pedido com cliente e itens) | 23 | ✅ 23/23 |
 | `src/lib/status.test.ts` | RF05 (etapas do pedido) | 3 | ✅ 3/3 |
 | `src/lib/whatsapp.test.ts` | RF02 (WhatsApp com mensagem pronta) | 5 | ✅ 5/5 |
-| `src/middleware.test.ts` | RNF03 (CRM só com login) | 5 | ✅ 5/5 |
+| `src/middleware.test.ts` | RNF03 (CRM só com login) | 6 | ✅ 6/6 |
 | `src/painel/dados.test.ts` | RF04 (clientes), RF05, RF07 (estoque) | 18 | ✅ 18/18 |
 | `src/painel/graficos.test.ts` | painel (relatórios visuais) | 7 | ✅ 7/7 |
 | `src/painel/util.test.ts` | segurança (XSS), telefone, datas | 12 | ✅ 12/12 |
@@ -44,7 +44,7 @@
 | `src/painel/nucleo.ts` | 0% | 100% | 100% |
 | `src/painel/telas.ts` | 0% | 100% | 100% |
 | `src/painel/util.ts` | 91.66% | 91.66% | 89.28% |
-| **Total** | **53.42%** | **82.92%** | **85.07%** |
+| **Total** | **53.35%** | **82.92%** | **85.07%** |
 
 > `src/painel/nucleo.ts` e `telas.ts` são a interface do painel (cliques e telas): são cobertos pelo **teste de ponta a ponta** no navegador (login → 5 telas → regra do pedido → excluir cliente → celular), não por teste unitário.
 
@@ -203,6 +203,7 @@
 - ✅ middleware de login › sem sessão: bloqueia o painel
 - ✅ middleware de login › com sessão: libera
 - ✅ middleware de login › a própria tela de login fica liberada (senão seria um laço)
+- ✅ sair do painel › o painel tem o botão Sair, que encerra a sessão (signOut em nucleo.ts)
 
 ### `src/painel/dados.test.ts` — RF04 (clientes), RF05, RF07 (estoque)
 
